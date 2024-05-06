@@ -15,15 +15,18 @@ type SRCType = {
   password: string;
 };
 
+// import modules
 import { randomBytes, createHash } from 'crypto';
 import config from 'config';
-const env = process.env.NODE_ENV || 'development';
 const appConfig = config;
-// connect to database
-import mongoose, { set } from 'mongoose';
+
+// import models
 import Admin from './Models/Admin';
 import School from './Models/School';
 import SRC from './Models/SRC';
+
+// connect to database
+import mongoose, { set } from 'mongoose';
 const url = process.env.DATABASE_URL;
 const connect = async () => {
   try {
@@ -81,12 +84,22 @@ const createSchool = async (
   console.log(`School ${name} created`);
 };
 
-const admins: AdminType[] = appConfig.get('admins');
-for (const admin of admins) {
-  createAdmin(admin.username, admin.starterPassword);
-}
+const setup = async () => {
+  let adminLength = await Admin.find();
+  if (adminLength.length > 0) {
+    console.log('setup already done');
+    process.exit(0);
+  }
 
-const schools: SchoolType[] = appConfig.get('schools');
-for (const school of schools) {
-  createSchool(school.name, school.phoneNumber, school.address, school.SRC);
-}
+  const admins: AdminType[] = appConfig.get('admins');
+  for (const admin of admins) {
+    createAdmin(admin.username, admin.starterPassword);
+  }
+
+  const schools: SchoolType[] = appConfig.get('schools');
+  for (const school of schools) {
+    createSchool(school.name, school.phoneNumber, school.address, school.SRC);
+  }
+};
+
+setup();

@@ -70,11 +70,18 @@ const createUser = async (
     username,
     password: { salt, hash },
     email,
+    class: userType === 'student' ? 'default' : null,
   });
-  await newUser.save().catch((err: Error) => {
-    return err.message;
-  });
-  return 'success';
+
+  // save user to database
+  try {
+    await newUser.save();
+    // return success message
+    return 'success';
+  } catch (err) {
+    // return error message
+    return err.message.split(':').slice(-1)[0].trim();
+  }
 };
 
 export { checkPassword, generateAccessToken, createUser };
