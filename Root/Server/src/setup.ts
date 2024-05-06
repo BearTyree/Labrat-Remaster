@@ -1,0 +1,92 @@
+type AdminType = {
+  username: string;
+  starterPassword: string;
+};
+
+type SchoolType = {
+  name: string;
+  phoneNumber: string;
+  address: string;
+  SRC: SRCType;
+};
+
+type SRCType = {
+  username: string;
+  password: string;
+};
+
+import { randomBytes, createHash } from 'crypto';
+import config from 'config';
+const env = process.env.NODE_ENV || 'development';
+const appConfig = config;
+// connect to database
+import mongoose, { set } from 'mongoose';
+import Admin from './Models/Admin';
+import School from './Models/School';
+import SRC from './Models/SRC';
+const url = process.env.DATABASE_URL;
+const connect = async () => {
+  try {
+    await mongoose.connect(url, { dbName: 'LabRatRemaster' });
+    console.log('connected to database');
+  } catch (err) {
+    console.log(err.message);
+    // try to connect again after 5 seconds
+    setTimeout(connect, 5000);
+  }
+};
+connect();
+
+const createAdmin = async (username: string, password: string) => {
+  const salt = randomBytes(16).toString('hex');
+  const hash = createHash('sha256')
+    .update(salt + password)
+    .digest('hex');
+  new Admin({
+    username: username,
+    password: {
+      salt,
+      hash,
+    },
+    hasSetPassword: false,
+  }).save();
+  console.log(`Admin ${username} created`);
+};
+
+const createSchool = async (
+  name: string,
+  phoneNumber: string,
+  address: string,
+  schoolSRC: SRCType
+) => {
+  const salt = randomBytes(16).toString('hex');
+  const hash = createHash('sha256')
+    .update(salt + schoolSRC.password)
+    .digest('hex');
+  let newSRC = await new SRC({
+    username: schoolSRC.username,
+    password: {
+      salt,
+      hash,
+    },
+    hasSetPassword: false,
+  }).save();
+
+  new School({
+    name: name,
+    phoneNumber: phoneNumber,
+    address: address,
+    SRC: newSRC,
+  }).save();
+  console.log(`School ${name} created`);
+};
+
+const admins: AdminType[] = appConfig.get('admins');
+for (const admin of admins) {
+  createAdmin(admin.username, admin.starterPassword);
+}
+
+const schools: SchoolType[] = appConfig.get('schools');
+for (const school of schools) {
+  createSchool(school.name, school.phoneNumber, school.address, school.SRC);
+}

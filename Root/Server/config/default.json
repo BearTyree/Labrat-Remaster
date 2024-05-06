@@ -1,0 +1,15 @@
+{
+  "defaultStarterPassword": "password",
+  "admins": [
+    { "username": "Admin One", "starterPassword": null },
+    { "username": "Admin Two", "starterPassword": null }
+  ],
+  "schools": [
+    {
+      "name": "School One",
+      "phoneNumber": "123-456-7890",
+      "address": "Address One",
+      "SRC": { "username": "Admin On0e", "starterPassword": "admin" }
+    }
+  ]
+}

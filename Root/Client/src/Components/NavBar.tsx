@@ -4,8 +4,9 @@ import { NavLink } from 'react-router-dom';
 function NavBar() {
   return (
     <div className={Styles.navBar}>
-      <NavLink to='/'>Home</NavLink>
+      <NavLink to='/'>home</NavLink>
       <NavLink to='/login'>login</NavLink>
+      <NavLink to='/signup'>signup</NavLink>
     </div>
   );
 }

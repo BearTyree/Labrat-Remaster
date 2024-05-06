@@ -1,16 +1,18 @@
 import { useEffect } from 'react';
 
-function Login() {
+function Signup() {
   useEffect(() => {
-    fetch('http://localhost:3000/login', {
+    fetch('http://localhost:3000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         userType: 'student',
-        username: 'admin',
+        username: 'dfsdsf',
         password: 'admin',
+        email: '',
+        classCode: 'dfsdfs',
       }),
     })
       .then((res) => res.json())
@@ -19,9 +21,9 @@ function Login() {
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Signup</h1>
     </div>
   );
 }
 
-export default Login;
+export default Signup;
