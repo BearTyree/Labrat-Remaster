@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import Student from '../Models/Student';
+import Class from '../Models/Class';
 import { createHash, randomBytes } from 'crypto';
 
 const checkPassword = async (
@@ -44,15 +45,17 @@ const createUser = async (
   userType: string,
   username: string,
   password: string,
-  email: string
+  email: string,
+  classCode: string
 ) => {
   // set user model based on userType
   let model = null;
-  if (userType === 'student') {
-    model = Student;
-  } else {
-    // userType not found
-    return 'no such user type';
+  switch (userType) {
+    case 'student':
+      model = Student;
+      break;
+    default:
+      return 'no such user type';
   }
   // check if user already exists
   const user = await model.findOne({ username }).catch((err: Error) => {
@@ -61,6 +64,12 @@ const createUser = async (
   if (user) {
     return 'user already exists';
   }
+  const classModel = await Class.findOne({ code: classCode }).catch(
+    (err: Error) => {
+      console.log(err);
+      return err.message;
+    }
+  );
   // create new user
   const salt = randomBytes(16).toString('hex');
   const hash = createHash('sha256')
@@ -70,7 +79,7 @@ const createUser = async (
     username,
     password: { salt, hash },
     email,
-    class: userType === 'student' ? 'default' : null,
+    class: classModel,
   });
 
   // save user to database

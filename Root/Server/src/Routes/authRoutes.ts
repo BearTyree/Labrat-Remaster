@@ -31,9 +31,13 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-  let userType: string, username: string, password: string, email: string;
+  let userType: string,
+    username: string,
+    password: string,
+    email: string,
+    classCode: string;
   try {
-    ({ userType, username, password, email } = req.body);
+    ({ userType, username, password, email, classCode } = req.body);
   } catch (err) {
     console.log(err);
   }
@@ -43,7 +47,8 @@ router.post('/signup', async (req, res) => {
     userType,
     username,
     password,
-    email
+    email,
+    classCode
   );
   if ((userResult as string) == 'success') {
     res.status(200).json({ token: generateAccessToken(userType, username) });
