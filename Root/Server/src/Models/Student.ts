@@ -1,10 +1,18 @@
 import mongoose from 'mongoose';
 
+interface IUser {
+  name: string;
+  password: {
+    salt: string;
+    hash: string;
+  };
+  email: string;
+}
+
 const studentSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
     required: [true, 'Please enter a name'],
-    unique: [true, 'Username already exists'],
   },
   password: {
     type: {
@@ -29,5 +37,5 @@ const studentSchema = new mongoose.Schema({
   },
 });
 
-const Student = mongoose.model('student', studentSchema);
+const Student = mongoose.model<IUser>('student', studentSchema);
 export default Student;

@@ -8,9 +8,8 @@ function Login() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userType: 'student',
-        username: 'admin',
-        password: 'admin',
+        email: 'ert@gmail.com',
+        password: 'ert',
       }),
     })
       .then((res) => res.json())
