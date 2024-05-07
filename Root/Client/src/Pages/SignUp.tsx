@@ -1,10 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [userType, setUserType] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [classCode, setClassCode] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/student');
+    }
+  }, []);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -18,12 +30,14 @@ function Signup() {
         username,
         password,
         email,
+        classCode,
       }),
     });
 
     const data = await response.json();
     if (response.ok) {
-      alert('Success');
+      localStorage.setItem('token', data.token);
+      navigate('/student');
       return;
     } else {
       alert(data.message);
@@ -65,7 +79,13 @@ function Signup() {
           onChange={(e) => setEmail(e.target.value)}
         />
         {userType === 'student' ? <p>class:</p> : null}
-        {userType === 'student' ? <input type='text' id='class' /> : null}
+        {userType === 'student' ? (
+          <input
+            type='text'
+            id='class'
+            onChange={(e) => setClassCode(e.target.value)}
+          />
+        ) : null}
         <button type='submit'>Submit</button>
       </form>
     </div>

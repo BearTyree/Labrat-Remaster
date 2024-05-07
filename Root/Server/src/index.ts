@@ -23,6 +23,12 @@ const connect = async () => {
 };
 connect();
 
+import Class from './Models/Class';
+new Class({
+  name: 'Test Class',
+  code: 'test',
+}).save();
+
 import authRoutes from './Routes/authRoutes';
 app.use(authRoutes);
 

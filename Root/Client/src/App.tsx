@@ -5,6 +5,8 @@ import Login from './Pages/Login.tsx';
 import Home from './Pages/Home.tsx';
 import Signup from './Pages/SignUp.tsx';
 import Confirmation from './Pages/confirmation.tsx';
+import StudentDashboard from './Pages/StudentDashboard.tsx';
+
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/confirmation' element={<Confirmation />} />
-      </Routes>
-    </div>
+        <Route path='/student' element={<StudentDashboard />} />
+
+      </Routes >
+    </div >
   );
 }
 
