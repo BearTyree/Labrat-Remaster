@@ -1,10 +1,19 @@
 import { has } from 'config';
 import mongoose from 'mongoose';
 
+interface IUser {
+  name: string;
+  password: {
+    salt: string;
+    hash: string;
+  };
+  email: string;
+}
+
 const SRCSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
-    required: [true, 'Please enter a name'],
+    required: [false, 'Please enter a name'],
     unique: [true, 'Username already exists'],
   },
   password: {
@@ -14,12 +23,17 @@ const SRCSchema = new mongoose.Schema({
     },
     required: [true, 'Please enter a password'],
   },
+  email: {
+    type: String,
+    required: [true, 'Please enter an email'],
+    unique: [true, 'Email already exists'],
+  },
   hasSetPassword: {
     type: Boolean,
     required: [true, 'Please enter a password'],
   },
 });
 
-const SRC = mongoose.model('src', SRCSchema);
+const SRC = mongoose.model<IUser>('src', SRCSchema);
 
 export default SRC;

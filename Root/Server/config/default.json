@@ -9,7 +9,7 @@
       "name": "School One",
       "phoneNumber": "123-456-7890",
       "address": "Address One",
-      "SRC": { "username": "Admin On0e", "starterPassword": "admin" }
+      "SRC": { "email": "yop@gmail.com", "starterPassword": "admin" }
     }
   ]
 }

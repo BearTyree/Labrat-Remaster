@@ -23,14 +23,15 @@ const connect = async () => {
 };
 connect();
 
-import Class from './Models/Class';
-new Class({
-  name: 'Test Class',
-  code: 'test',
-}).save();
-
 import authRoutes from './Routes/authRoutes';
 app.use(authRoutes);
+
+// import Class from './Models/Class';
+
+// new Class({
+//   code: 'test',
+//   name: 'test',
+// }).save();
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

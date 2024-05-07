@@ -11,8 +11,8 @@ type SchoolType = {
 };
 
 type SRCType = {
-  username: string;
-  password: string;
+  email: string;
+  starterPassword: string;
 };
 
 // import modules
@@ -64,10 +64,11 @@ const createSchool = async (
 ) => {
   const salt = randomBytes(16).toString('hex');
   const hash = createHash('sha256')
-    .update(salt + schoolSRC.password)
+    .update(salt + schoolSRC.starterPassword)
     .digest('hex');
+
   let newSRC = await new SRC({
-    username: schoolSRC.username,
+    email: schoolSRC.email,
     password: {
       salt,
       hash,
@@ -93,13 +94,20 @@ const setup = async () => {
 
   const admins: AdminType[] = appConfig.get('admins');
   for (const admin of admins) {
-    createAdmin(admin.username, admin.starterPassword);
+    await createAdmin(admin.username, admin.starterPassword);
   }
 
   const schools: SchoolType[] = appConfig.get('schools');
   for (const school of schools) {
-    createSchool(school.name, school.phoneNumber, school.address, school.SRC);
+    await createSchool(
+      school.name,
+      school.phoneNumber,
+      school.address,
+      school.SRC
+    );
   }
+
+  process.exit(0);
 };
 
 setup();

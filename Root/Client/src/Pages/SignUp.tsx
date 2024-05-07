@@ -5,7 +5,7 @@ function Signup() {
   const navigate = useNavigate();
 
   const [userType, setUserType] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [classCode, setClassCode] = useState('');
@@ -27,7 +27,7 @@ function Signup() {
       },
       body: JSON.stringify({
         userType,
-        username,
+        name,
         password,
         email,
         classCode,
@@ -60,11 +60,11 @@ function Signup() {
           <option value='admin'>admin</option>
           <option value='src'>src</option>
         </select>
-        <p>username:</p>
+        <p>name:</p>
         <input
           type='text'
           id='username'
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
         <p>password:</p>
         <input
