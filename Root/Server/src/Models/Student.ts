@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { MongooseError } from 'mongoose';
 
 interface IUser {
   name: string;
@@ -7,6 +7,7 @@ interface IUser {
     hash: string;
   };
   email: string;
+  isEmailVerified: boolean;
 }
 
 const studentSchema = new mongoose.Schema({
@@ -24,7 +25,11 @@ const studentSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Please enter an email'],
-    unique: [true, 'Email already exists'],
+    unique: false,
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
   },
   projects: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -37,5 +42,26 @@ const studentSchema = new mongoose.Schema({
   },
 });
 
+studentSchema.pre('save', async function (next) {
+  const student = this;
+  const results: IUser = (await Student.findOne({ email: student.email }).catch(
+    (err: MongooseError) => {
+      next(err);
+    }
+  )) as IUser;
+  if (results) {
+    // there was a result found, so the email address exists
+    if (results.isEmailVerified) {
+      student.invalidate('email', 'email must be unique');
+      next(new Error('email must be unique'));
+    } else {
+      console.log('already exists');
+      next();
+    }
+  } else {
+    // no results, email has not been taken
+    next();
+  }
+});
 const Student = mongoose.model<IUser>('student', studentSchema);
 export default Student;

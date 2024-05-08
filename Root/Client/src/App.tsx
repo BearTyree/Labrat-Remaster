@@ -7,10 +7,9 @@ import Signup from './Pages/SignUp.tsx';
 import Confirmation from './Pages/confirmation.tsx';
 import StudentDashboard from './Pages/StudentDashboard.tsx';
 
-
 function App() {
   return (
-    <div className={Styles.app}>
+    <div className={`${Styles.app} grow flex flex-col`}>
       <NavBar />
       <Routes>
         <Route path='/' element={<Home />} />
@@ -18,9 +17,8 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path='/confirmation' element={<Confirmation />} />
         <Route path='/student' element={<StudentDashboard />} />
-
-      </Routes >
-    </div >
+      </Routes>
+    </div>
   );
 }
 

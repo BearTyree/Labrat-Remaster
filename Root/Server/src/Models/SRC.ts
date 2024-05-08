@@ -8,6 +8,7 @@ interface IUser {
     hash: string;
   };
   email: string;
+  isEmailVerified: boolean;
 }
 
 const SRCSchema = new mongoose.Schema({

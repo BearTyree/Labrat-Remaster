@@ -6,6 +6,7 @@ interface IUser {
     hash: string;
   };
   email: string;
+  isEmailVerified: boolean;
 }
 
 const adminSchema = new mongoose.Schema({

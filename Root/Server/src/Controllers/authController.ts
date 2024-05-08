@@ -88,13 +88,6 @@ const createUser = async (
       return 'no such user type';
   }
 
-  // check if user already exists
-  const user = await model.findOne({ email }).catch((err: Error) => {
-    return err.message;
-  });
-  if (user) {
-    return 'user already exists';
-  }
   const classModel = await Class.findOne({ code: classCode }).catch(
     (err: Error) => {
       console.log(err);
@@ -120,7 +113,7 @@ const createUser = async (
     return 'success';
   } catch (err) {
     // return error message
-    return err.message.split(':').slice(-1)[0].trim();
+    return err.message;
   }
 };
 
