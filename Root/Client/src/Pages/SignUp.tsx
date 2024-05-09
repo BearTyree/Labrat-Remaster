@@ -12,9 +12,28 @@ function Signup() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/student');
+    async function checkToken() {
+      if (token) {
+        const response = await fetch(
+          'http://localhost:3000/authenticateToken',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (response.ok) {
+          navigate('/student');
+        } else {
+          console.log('Token not valid');
+          localStorage.clear();
+        }
+      }
     }
+    checkToken();
   }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -37,7 +56,9 @@ function Signup() {
     const data = await response.json();
     if (response.ok) {
       localStorage.setItem('token', data.token);
-      navigate('/student');
+      localStorage.setItem('userType', userType);
+      localStorage.setItem('email', email);
+      navigate('/verify');
       return;
     } else {
       alert(data.message);

@@ -7,6 +7,7 @@ interface IUser {
   };
   email: string;
   isEmailVerified: boolean;
+  emailVerificationCode?: string;
 }
 
 const adminSchema = new mongoose.Schema({

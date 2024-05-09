@@ -115,6 +115,7 @@ const createUser = async (
     name,
     password: { salt, hash },
     email,
+    emailVerificationCode: randomBytes(16).toString('hex'),
     class: classModel,
   });
 
@@ -129,4 +130,73 @@ const createUser = async (
   }
 };
 
-export { checkPassword, generateAccessToken, createUser, getUserType };
+const checkVerified = async (email: string) => {
+  let models = [Student, SRC, Admin];
+  let user = null;
+  // check all user types for user
+  for (let modelType of models) {
+    // get list of users with email
+    let possibleUsers = (await modelType.find({ email }).catch((err: Error) => {
+      return err.message;
+    })) as IUser[]; // Cast possibleUser as IUser
+
+    // check if user is verified
+    for (let possibleUser of possibleUsers) {
+      if (possibleUser.isEmailVerified == true) {
+        user = possibleUser;
+        break;
+      }
+    }
+
+    // if user is verified return
+    if (user) {
+      return 'success';
+    }
+  }
+};
+
+const authenticateToken = async (token: string) => {
+  try {
+    await jwt.verify(token, process.env.TOKEN_SECRET).catch((err: Error) => {
+      return err.message;
+    });
+
+    return 'success';
+  } catch (err) {
+    return err.message;
+  }
+};
+
+const verifyEmail = async (email: string, emailVerificationCode: string) => {
+  // find user with emailVerificationCode
+  let models = [Student, SRC, Admin];
+  let user = null;
+  for (let modelType of models) {
+    const possibleUser = (await modelType
+      .findOneAndUpdate(
+        { emailVerificationCode, email },
+        { isEmailVerified: true }
+      )
+      .catch((err: Error) => {
+        return err.message;
+      })) as IUser;
+    if (possibleUser) {
+      user = possibleUser;
+      break;
+    }
+  }
+  if (!user) {
+    return 'user not found';
+  }
+  return 'success';
+};
+
+export {
+  checkPassword,
+  generateAccessToken,
+  createUser,
+  getUserType,
+  checkVerified,
+  authenticateToken,
+  verifyEmail,
+};

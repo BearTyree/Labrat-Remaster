@@ -8,6 +8,7 @@ interface IUser {
   };
   email: string;
   isEmailVerified: boolean;
+  emailVerificationCode?: string;
 }
 
 const studentSchema = new mongoose.Schema({
@@ -30,6 +31,10 @@ const studentSchema = new mongoose.Schema({
   isEmailVerified: {
     type: Boolean,
     default: false,
+  },
+  emailVerificationCode: {
+    type: String,
+    required: [true, 'Please enter an email verification code'],
   },
   projects: {
     type: [mongoose.Schema.Types.ObjectId],

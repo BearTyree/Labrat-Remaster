@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,6 +24,7 @@ function Login() {
     if (response.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userType', data.userType);
+      navigate(`/${data.userType}`);
       return;
     } else {
       alert(data.message);

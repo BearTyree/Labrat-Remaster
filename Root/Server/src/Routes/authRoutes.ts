@@ -4,6 +4,9 @@ import {
   generateAccessToken,
   createUser,
   getUserType,
+  checkVerified,
+  authenticateToken,
+  verifyEmail,
 } from '../Controllers/authController';
 import { get } from 'config';
 
@@ -56,6 +59,58 @@ router.post('/signup', async (req, res) => {
     res.status(200).json({ token: generateAccessToken(email) });
   } else {
     res.status(400).json({ message: userResult });
+  }
+});
+
+router.post('/checkVerified', async (req, res) => {
+  let email: string;
+  try {
+    ({ email } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const verified = await checkVerified(email);
+
+  if (verified == 'success') {
+    res.status(200).json({ message: 'success' });
+  } else {
+    res.status(400).json({ message: verified });
+  }
+});
+
+router.post('/authenticateToken', async (req, res) => {
+  let token: string;
+  try {
+    ({ token } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const verified = await authenticateToken(token);
+
+  if (verified == 'success') {
+    res.status(200).json({ message: 'success' });
+  } else {
+    res.status(400).json({ message: verified });
+  }
+});
+
+router.post('/verify', async (req, res) => {
+  let emailVerificationCode: string;
+  let email: string;
+  try {
+    ({ emailVerificationCode, email } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const verified = await verifyEmail(email, emailVerificationCode);
+
+  if (verified == 'success') {
+    res.status(200).json({ message: 'success' });
+  } else {
+    res.status(400).json({ message: verified });
   }
 });
 
