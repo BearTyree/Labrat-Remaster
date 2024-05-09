@@ -1,26 +1,38 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 function Login() {
-  useEffect(() => {
-    fetch('http://localhost:3000/login', {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const response = await fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: 'ert@gmail.com',
-        password: 'ert',
+        email,
+        password,
       }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  }, []);
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userType', data.userType);
+      return;
+    } else {
+      alert(data.message);
+    }
+  };
 
   return (
     <div className='flex grow items-center justify-center h-full bg-gradient-to-r from-cyan-500 to-blue-500'>
       <div className='bg-white p-8 rounded-lg shadow-lg max-w-sm w-full'>
         <h1 className='text-xl font-bold text-center mb-6'>Login</h1>
-        <form>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <div className='mb-4'>
             <label
               htmlFor='email'
@@ -32,6 +44,7 @@ function Login() {
               type='email'
               id='email'
               name='email'
+              onChange={(e) => setEmail(e.target.value)}
               className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
               required
             />
@@ -47,6 +60,7 @@ function Login() {
               type='password'
               id='password'
               name='password'
+              onChange={(e) => setPassword(e.target.value)}
               className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
               required
             />

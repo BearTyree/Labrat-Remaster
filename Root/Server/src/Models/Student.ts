@@ -44,24 +44,20 @@ const studentSchema = new mongoose.Schema({
 
 studentSchema.pre('save', async function (next) {
   const student = this;
-  const results: IUser = (await Student.findOne({ email: student.email }).catch(
+  const results: IUser[] = (await Student.find({ email: student.email }).catch(
     (err: MongooseError) => {
       next(err);
     }
-  )) as IUser;
-  if (results) {
-    // there was a result found, so the email address exists
-    if (results.isEmailVerified) {
+  )) as IUser[];
+  for (let result of results) {
+    if (result.isEmailVerified) {
       student.invalidate('email', 'email must be unique');
       next(new Error('email must be unique'));
-    } else {
-      console.log('already exists');
-      next();
     }
-  } else {
-    // no results, email has not been taken
-    next();
   }
+
+  // no results, email has not been taken
+  next();
 });
 const Student = mongoose.model<IUser>('student', studentSchema);
 export default Student;

@@ -4,6 +4,16 @@ import Class from '../Models/Class';
 import SRC from '../Models/SRC';
 import Admin from '../Models/Admin';
 import { createHash, randomBytes } from 'crypto';
+import c from 'config';
+interface IUser {
+  name: string;
+  password: {
+    salt: string;
+    hash: string;
+  };
+  email: string;
+  isEmailVerified: boolean;
+}
 
 const checkPassword = async (email: string, password: string) => {
   // all possible user types
@@ -11,19 +21,21 @@ const checkPassword = async (email: string, password: string) => {
   let user = null;
   // check all user types for user
   for (let modelType of models) {
-    let possibleUser = await modelType
-      .findOne({ email })
-      .catch((err: Error) => {
-        return err.message;
-      });
-    if (possibleUser) {
-      user = possibleUser;
-      break;
+    let possibleUsers = (await modelType.find({ email }).catch((err: Error) => {
+      return err.message;
+    })) as IUser[]; // Cast possibleUser as IUser
+    console.log(possibleUsers);
+    for (let possibleUser of possibleUsers) {
+      if (possibleUser && possibleUser.isEmailVerified == true) {
+        user = possibleUser;
+        break;
+      }
     }
   }
 
   // if user not found return
   if (!user) {
+    console.log(user);
     return 'user not found';
   }
 
