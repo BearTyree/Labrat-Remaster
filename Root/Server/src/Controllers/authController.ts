@@ -174,8 +174,9 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
   for (let modelType of models) {
     const possibleUser = (await modelType
       .findOneAndUpdate(
-        { emailVerificationCode, email },
-        { isEmailVerified: true }
+        { emailVerificationCode, email, isEmailVerified: false },
+        { isEmailVerified: true },
+        { returnOriginal: false }
       )
       .catch((err: Error) => {
         return err.message;
@@ -187,6 +188,14 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
   }
   if (!user) {
     return 'user not found';
+  }
+
+  for (let modelType of models) {
+    const possibleUsers = await modelType
+      .deleteMany({ email, isEmailVerified: false })
+      .catch((err: Error) => {
+        return err.message;
+      });
   }
   return 'success';
 };
