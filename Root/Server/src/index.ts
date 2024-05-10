@@ -25,6 +25,8 @@ connect();
 
 import authRoutes from './Routes/authRoutes';
 app.use(authRoutes);
+import projectRoutes from './Routes/projectRoutes';
+app.use(projectRoutes);
 
 // import Class from './Models/Class';
 

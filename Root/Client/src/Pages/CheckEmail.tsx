@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-function Verify() {
+function CheckEmail() {
   const navigate = useNavigate();
   const handleClick = async () => {
     const response = await fetch('http://localhost:3000/verify', {
@@ -32,4 +32,4 @@ function Verify() {
   );
 }
 
-export default Verify;
+export default CheckEmail;

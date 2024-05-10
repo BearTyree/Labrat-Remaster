@@ -8,7 +8,6 @@ import {
   authenticateToken,
   verifyEmail,
 } from '../Controllers/authController';
-import { get } from 'config';
 
 const router = Router();
 
@@ -82,14 +81,17 @@ router.post('/checkVerified', async (req, res) => {
 router.post('/authenticateToken', async (req, res) => {
   let token: string;
   try {
-    ({ token } = req.body);
+    const authHeader = req.headers['authorization'];
+    token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
   } catch (err) {
     console.log(err);
   }
 
   const verified = await authenticateToken(token);
 
-  if (verified == 'success') {
+  if (verified.message == 'success') {
     res.status(200).json({ message: 'success' });
   } else {
     res.status(400).json({ message: verified });

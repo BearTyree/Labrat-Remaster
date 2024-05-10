@@ -58,7 +58,7 @@ function Signup() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userType', userType);
       localStorage.setItem('email', email);
-      navigate('/verify');
+      navigate('/checkEmail');
       return;
     } else {
       alert(data.message);

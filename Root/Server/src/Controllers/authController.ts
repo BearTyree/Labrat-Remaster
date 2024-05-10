@@ -4,7 +4,7 @@ import Class from '../Models/Class';
 import SRC from '../Models/SRC';
 import Admin from '../Models/Admin';
 import { createHash, randomBytes } from 'crypto';
-import c from 'config';
+
 interface IUser {
   name: string;
   password: {
@@ -17,6 +17,7 @@ interface IUser {
 
 const checkPassword = async (email: string, password: string) => {
   // all possible user types
+
   let models = [Student, SRC, Admin];
   let user = null;
   // check all user types for user
@@ -24,7 +25,6 @@ const checkPassword = async (email: string, password: string) => {
     let possibleUsers = (await modelType.find({ email }).catch((err: Error) => {
       return err.message;
     })) as IUser[]; // Cast possibleUser as IUser
-    console.log(possibleUsers);
     for (let possibleUser of possibleUsers) {
       if (possibleUser && possibleUser.isEmailVerified == true) {
         user = possibleUser;
@@ -35,7 +35,6 @@ const checkPassword = async (email: string, password: string) => {
 
   // if user not found return
   if (!user) {
-    console.log(user);
     return 'user not found';
   }
 
@@ -96,7 +95,6 @@ const createUser = async (
       model = Student;
       break;
     default:
-      console.log(userType);
       return 'no such user type';
   }
 
@@ -157,11 +155,15 @@ const checkVerified = async (email: string) => {
 
 const authenticateToken = async (token: string) => {
   try {
-    await jwt.verify(token, process.env.TOKEN_SECRET).catch((err: Error) => {
-      return err.message;
-    });
-
-    return 'success';
+    const authenticatedToken = await jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    if (authenticatedToken) {
+      return { message: 'success', email: authenticatedToken.email };
+    } else {
+      return { message: 'token not valid' };
+    }
   } catch (err) {
     return err.message;
   }

@@ -1,15 +1,5 @@
 import mongoose, { MongooseError } from 'mongoose';
-
-interface IUser {
-  name: string;
-  password: {
-    salt: string;
-    hash: string;
-  };
-  email: string;
-  isEmailVerified: boolean;
-  emailVerificationCode?: string;
-}
+import { IUser } from '../Interfaces/user.interface';
 
 const studentSchema = new mongoose.Schema({
   name: {
