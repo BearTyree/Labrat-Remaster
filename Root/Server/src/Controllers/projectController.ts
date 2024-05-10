@@ -28,7 +28,7 @@ const getProjects = async (email: string) => {
         return err.message;
       });
     if ((student as IUser).projects) {
-      return (student as IUser).projects;
+      return { message: 'success', projects: (student as IUser).projects };
     } else {
       throw new Error('Projects not found');
     }

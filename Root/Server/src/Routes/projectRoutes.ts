@@ -37,7 +37,7 @@ router.post('/newProject', async (req, res) => {
   }
 });
 
-router.post('getProjects', async (req, res) => {
+router.get('/getProjects', async (req, res) => {
   let token: string;
   try {
     const authHeader = req.headers['authorization'];
@@ -58,7 +58,7 @@ router.post('getProjects', async (req, res) => {
   const projects = await getProjects(verified.email);
 
   if (projects.message == 'success') {
-    res.status(200).json({ message: 'success' });
+    res.status(200).json({ message: 'success', projects: projects.projects });
   } else {
     res.status(400).json({ message: projects });
   }
