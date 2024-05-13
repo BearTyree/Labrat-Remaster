@@ -15,6 +15,7 @@ router.post('/newProject', async (req, res) => {
     console.log(err);
   }
   let name: string;
+
   try {
     ({ name } = req.body);
   } catch (err) {
@@ -30,8 +31,8 @@ router.post('/newProject', async (req, res) => {
 
   const createdProject = await createProject(name, verified.email);
 
-  if (createdProject == 'success') {
-    res.status(200).json({ message: 'success' });
+  if (createdProject.message == 'success') {
+    res.status(200).json({ message: 'success', id: createdProject.id });
   } else {
     res.status(400).json({ message: createdProject });
   }

@@ -65,7 +65,7 @@ function Signup() {
     }
   };
   return (
-    <div className='flex items-center justify-center grow bg-gradient-to-r from-cyan-500 to-blue-500'>
+    <div className='flex items-center justify-center grow'>
       <div className='bg-white p-8 rounded-lg shadow-lg max-w-sm w-full'>
         <h1 className='text-xl font-bold text-center mb-6'>Signup</h1>
         <form onSubmit={handleSubmit}>

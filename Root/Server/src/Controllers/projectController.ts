@@ -14,7 +14,7 @@ const createProject = async (name: string, email: string) => {
       { $push: { projects: project._id } },
       { new: true }
     );
-    return 'success';
+    return { message: 'success', id: project._id };
   } catch (err) {
     return err.message;
   }

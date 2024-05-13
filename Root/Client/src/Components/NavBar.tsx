@@ -34,25 +34,48 @@ function NavBar() {
     checkToken();
   }, []);
   return (
-    <div className={Styles.navBar}>
-      {localStorage.getItem('token') && validToken ? (
-        <button
-          onClick={() => {
-            localStorage.clear();
-            navigate('/');
-          }}
-        >
-          logout
-        </button>
-      ) : (
-        <>
-          {' '}
-          <NavLink to='/'>home</NavLink>
-          <NavLink to='/login'>login</NavLink>
-          <NavLink to='/signup'>signup</NavLink>
-        </>
-      )}
-    </div>
+    <>
+      <div
+        className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end px-32 flex z-50  py-2 bg-white`}
+      >
+        {localStorage.getItem('token') && validToken ? (
+          <>
+            <button
+              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
+              onClick={() => {
+                localStorage.clear();
+                navigate('/');
+              }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            {' '}
+            <NavLink
+              className='mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
+              to='/'
+            >
+              Home
+            </NavLink>
+            <NavLink
+              className='mx-3 justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
+              to='/login'
+            >
+              Login
+            </NavLink>
+            <NavLink
+              className='mx-3 justify-self-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
+              to='/signup'
+            >
+              Signup
+            </NavLink>
+          </>
+        )}
+      </div>
+      <div className='h-14'></div>
+    </>
   );
 }
 

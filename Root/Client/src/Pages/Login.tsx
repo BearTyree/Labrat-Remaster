@@ -32,7 +32,7 @@ function Login() {
   };
 
   return (
-    <div className='flex grow items-center justify-center h-full bg-gradient-to-r from-cyan-500 to-blue-500'>
+    <div className='flex grow items-center justify-center h-full'>
       <div className='bg-white p-8 rounded-lg shadow-lg max-w-sm w-full'>
         <h1 className='text-xl font-bold text-center mb-6'>Login</h1>
         <form onSubmit={(e) => handleSubmit(e)}>

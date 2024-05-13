@@ -7,6 +7,8 @@ import Signup from './Pages/SignUp.tsx';
 import Confirmation from './Pages/Confirmation.tsx';
 import CheckEmail from './Pages/CheckEmail.tsx';
 import StudentDashboard from './Pages/StudentDashboard.tsx';
+import Project from './Pages/Student/Project.tsx';
+import Projects from './Pages/Student/Projects.tsx';
 
 function App() {
   return (
@@ -17,7 +19,10 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/confirmation/:email/:code' element={<Confirmation />} />
-        <Route path='/student' element={<StudentDashboard />} />
+        <Route path='/student' element={<StudentDashboard />}>
+          <Route path='' element={<Projects />} />
+          <Route path='project/:id' element={<Project />} />
+        </Route>
         <Route path='/checkEmail' element={<CheckEmail />} />
       </Routes>
     </div>
