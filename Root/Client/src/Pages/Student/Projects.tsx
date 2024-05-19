@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 interface Project {
   _id: string;
   name: string;
+  description: string;
 }
 
 function Projects() {
@@ -61,24 +62,42 @@ function Projects() {
     getProjects();
   }, []);
   return (
-    <div className='bg-slate-50 grow'>
-      {' '}
-      {projects.map((project: Project) => {
-        return (
-          <div key={project._id}>
-            <h1>{project.name}</h1>
-          </div>
-        );
-      })}
-      <button
-        onClick={async () => {
-          const id = await newProject();
+    <div className=' bg-slate-50 grow h-x'>
+      <div className='pt-16 px-32'>
+        <h1 className='text-4xl text-left pt-16'>Projects</h1>
+      </div>
+      <div className='flex px-32 py-16'>
+        <input className='mr-2 mt-1 w-96 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+        <button className='mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'>
+          Search
+        </button>
+        <button
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
+          onClick={async () => {
+            const id = await newProject();
 
-          navigate('/student/project/' + id);
-        }}
-      >
-        New Project
-      </button>
+            navigate('/student/project/' + id + '/create');
+          }}
+        >
+          New Project
+        </button>
+      </div>
+      <div className='pb-16 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 px-32'>
+        {projects.map((project: Project) => {
+          return (
+            <div
+              className='cursor-pointer transition hover:scale-105 p-4 shadow-lg rounded-md h-24 bg-white'
+              key={project._id}
+              onClick={() => {
+                navigate('/student/project/' + project._id + '/edit');
+              }}
+            >
+              <h1>{project.name}</h1>
+              <p className='font-light'>{project.description}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -36,12 +36,18 @@ function NavBar() {
   return (
     <>
       <div
-        className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end px-32 flex z-50  py-2 bg-white`}
+        className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end flex z-50  py-2 bg-white`}
       >
         {localStorage.getItem('token') && validToken ? (
           <>
+            <NavLink
+              className='ml-4 mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
+              to='/'
+            >
+              Home
+            </NavLink>
             <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
+              className='mr-32 flex justify-center align-middle text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
               onClick={() => {
                 localStorage.clear();
                 navigate('/');
@@ -54,7 +60,7 @@ function NavBar() {
           <>
             {' '}
             <NavLink
-              className='mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
+              className='ml-32 mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
               to='/'
             >
               Home
@@ -66,7 +72,7 @@ function NavBar() {
               Login
             </NavLink>
             <NavLink
-              className='mx-3 justify-self-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
+              className='mr-32 mx-3 justify-self-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
               to='/signup'
             >
               Signup

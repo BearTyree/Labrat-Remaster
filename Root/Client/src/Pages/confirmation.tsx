@@ -8,6 +8,7 @@ function Confirmation() {
   useEffect(() => {
     console.log(params);
     async function verifyEmail() {
+      console.log(params);
       const response = await fetch('http://localhost:3000/verify', {
         method: 'POST',
         headers: {

@@ -21,7 +21,7 @@ function App() {
         <Route path='/confirmation/:email/:code' element={<Confirmation />} />
         <Route path='/student' element={<StudentDashboard />}>
           <Route path='' element={<Projects />} />
-          <Route path='project/:id' element={<Project />} />
+          <Route path='project/:id/:status' element={<Project />} />
         </Route>
         <Route path='/checkEmail' element={<CheckEmail />} />
       </Routes>

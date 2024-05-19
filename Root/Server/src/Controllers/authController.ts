@@ -160,6 +160,11 @@ const authenticateToken = async (token: string) => {
       process.env.ACCESS_TOKEN_SECRET
     );
     if (authenticatedToken) {
+      // check if user is verified
+      const verified = await checkVerified(authenticatedToken.email);
+      if (verified != 'success') {
+        return { message: 'email not verified' };
+      }
       return { message: 'success', email: authenticatedToken.email };
     } else {
       return { message: 'token not valid' };
@@ -173,7 +178,8 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
   // find user with emailVerificationCode
   let models = [Student, SRC, Admin];
   let user = null;
-  for (let modelType of models) {
+  for await (let modelType of models) {
+    console.log('modelType', modelType);
     const possibleUser = (await modelType
       .findOneAndUpdate(
         { emailVerificationCode, email, isEmailVerified: false },
@@ -189,6 +195,7 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
     }
   }
   if (!user) {
+    console.log('user not found');
     return 'user not found';
   }
 

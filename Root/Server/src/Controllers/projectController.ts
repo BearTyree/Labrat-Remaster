@@ -37,4 +37,28 @@ const getProjects = async (email: string) => {
   }
 };
 
-export { createProject, getProjects };
+const updateProject = async (id: string, name: string, description: string) => {
+  try {
+    await Project.findByIdAndUpdate(id, { name, description });
+    return { message: 'success' };
+  } catch (err) {
+    return { message: err.message };
+  }
+};
+
+const getProject = async (id: string) => {
+  try {
+    let project = await Project.findById(id).catch((err: Error) => {
+      return err.message;
+    });
+    if (project) {
+      return { message: 'success', project };
+    } else {
+      throw new Error('Project not found');
+    }
+  } catch (err) {
+    return { message: err.message };
+  }
+};
+
+export { createProject, getProjects, updateProject, getProject };
