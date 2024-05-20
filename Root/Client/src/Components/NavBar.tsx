@@ -38,11 +38,13 @@ function NavBar() {
       <div
         className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end flex z-50  py-2 bg-white`}
       >
-        {localStorage.getItem('token') && validToken ? (
+        {localStorage.getItem('token') &&
+        validToken &&
+        localStorage.getItem('userType') == 'student' ? (
           <>
             <NavLink
               className='ml-4 mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
-              to='/'
+              to='/student'
             >
               Home
             </NavLink>

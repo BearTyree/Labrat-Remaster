@@ -86,9 +86,6 @@ function Signup() {
                 Please Choose a Roll...
               </option>
               <option value='student'>student</option>
-              <option value='teacher'>teacher</option>
-              <option value='admin'>admin</option>
-              <option value='src'>src</option>
             </select>
           </div>
           <div className='mb-4'>
