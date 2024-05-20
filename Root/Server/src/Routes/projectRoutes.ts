@@ -7,6 +7,7 @@ import {
   getProjects,
   updateProject,
   getProject,
+  deleteProject,
 } from '../Controllers/projectController';
 
 router.post('/newProject', async (req, res) => {
@@ -139,6 +140,41 @@ router.post('/getProject', async (req, res) => {
     res.status(200).json({ message: 'success', project: project.project });
   } else {
     res.status(400).json({ message: project });
+  }
+});
+
+router.post('/deleteProject', async (req, res) => {
+  let token: string;
+  try {
+    const authHeader = req.headers['authorization'];
+    token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+  } catch (err) {
+    console.log(err);
+  }
+
+  let id: string;
+
+  try {
+    ({ id } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const verified = await authenticateToken(token);
+
+  if (verified.message != 'success') {
+    res.status(400).json({ message: verified });
+    return;
+  }
+
+  const deletedProject = await deleteProject(id, verified.email);
+
+  if (deletedProject.message == 'success') {
+    res.status(200).json({ message: 'success' });
+  } else {
+    res.status(400).json({ message: deletedProject });
   }
 });
 

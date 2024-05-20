@@ -1,6 +1,7 @@
 import Project from '../Models/Project';
 import Student from '../Models/Student';
 import { IUser } from '../Interfaces/user.interface';
+import Mongoose, { Schema } from 'mongoose';
 
 const createProject = async (name: string, email: string) => {
   try {
@@ -61,4 +62,29 @@ const getProject = async (id: string) => {
   }
 };
 
-export { createProject, getProjects, updateProject, getProject };
+const deleteProject = async (id: string, email: string) => {
+  try {
+    let project = await Project.findById(id);
+    if (!project) {
+      throw new Error('Project not found');
+    }
+    let student = await Student.findOne({ email });
+    if (!student) {
+      throw new Error('Student not found');
+    }
+
+    if (student.projects.map(String).includes(id)) {
+      await Project.findByIdAndDelete(id);
+      await Student.findOneAndUpdate(
+        { email },
+        { $pull: { projects: new Mongoose.Types.ObjectId(id) } }
+      );
+    }
+
+    return { message: 'success' };
+  } catch (err) {
+    return { message: err.message };
+  }
+};
+
+export { createProject, getProjects, updateProject, getProject, deleteProject };
