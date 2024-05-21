@@ -1,11 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    async function checkToken() {
+      if (token) {
+        const response = await fetch(
+          'http://localhost:3000/authenticateToken',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
+        if (response.ok) {
+          navigate('/student');
+        } else {
+          console.log('Token not valid');
+          localStorage.clear();
+        }
+      }
+    }
+    checkToken();
+  }, []);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

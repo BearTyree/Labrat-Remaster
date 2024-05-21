@@ -20,7 +20,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@dotenvx/dotenvx": "^0.35.1",
+    "@dotenvx/dotenvx": "^0.40.0",
     "@types/mongoose": "^5.11.97",
     "config": "^3.3.11",
     "express": "^4.19.2",

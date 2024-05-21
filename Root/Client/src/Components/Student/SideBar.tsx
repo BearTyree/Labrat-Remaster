@@ -14,7 +14,7 @@ function SideBar() {
           }
           to='/student'
         >
-          Button 1
+          Projects
         </NavLink>
         <NavLink
           className={({ isActive }) =>
