@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 function NavBar() {
   const navigate = useNavigate();
   const [validToken, setValidToken] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,6 +33,11 @@ function NavBar() {
       }
     }
     checkToken();
+  }, [token]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setToken(token);
   }, []);
   return (
     <>
@@ -49,7 +55,7 @@ function NavBar() {
               Home
             </NavLink>
             <button
-              className='mr-32 flex justify-center align-middle text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
+              className='mr-4 flex justify-center align-middle text-center bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
               onClick={() => {
                 localStorage.clear();
                 navigate('/');

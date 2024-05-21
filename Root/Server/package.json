@@ -23,6 +23,7 @@
     "@dotenvx/dotenvx": "^0.40.0",
     "@types/mongoose": "^5.11.97",
     "config": "^3.3.11",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.3",
