@@ -20,6 +20,14 @@ const SRCSchema = new mongoose.Schema({
     required: [true, 'Please enter an email'],
     unique: [true, 'Email already exists'],
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerificationCode: {
+    type: String,
+    required: [true, 'Please enter an email verification code'],
+  },
   hasSetPassword: {
     type: Boolean,
     required: [true, 'Please enter a password'],

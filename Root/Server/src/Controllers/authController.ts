@@ -4,6 +4,7 @@ import Class from '../Models/Class';
 import SRC from '../Models/SRC';
 import Admin from '../Models/Admin';
 import { createHash, randomBytes } from 'crypto';
+import { model } from 'mongoose';
 
 interface IUser {
   name: string;
@@ -25,8 +26,9 @@ const checkPassword = async (email: string, password: string) => {
     let possibleUsers = (await modelType.find({ email }).catch((err: Error) => {
       return err.message;
     })) as IUser[]; // Cast possibleUser as IUser
+
     for (let possibleUser of possibleUsers) {
-      if (possibleUser && possibleUser.isEmailVerified == true) {
+      if (possibleUser) {
         user = possibleUser;
         break;
       }
@@ -43,7 +45,11 @@ const checkPassword = async (email: string, password: string) => {
     .update(user.password.salt + password)
     .digest('hex');
   if (hash == user.password.hash) {
-    return 'success';
+    if (user.isEmailVerified == true) {
+      return 'success';
+    } else {
+      return 'not verified';
+    }
   } else {
     return 'wrong password';
   }
@@ -163,13 +169,17 @@ const authenticateToken = async (token: string) => {
       // check if user is verified
       const verified = await checkVerified(authenticatedToken.email);
       if (verified != 'success') {
-        return { message: 'email not verified' };
+        return {
+          message: 'email not verified',
+          email: authenticatedToken.email,
+        };
       }
       return { message: 'success', email: authenticatedToken.email };
     } else {
       return { message: 'token not valid' };
     }
   } catch (err) {
+    console.log(err);
     return err.message;
   }
 };
@@ -179,16 +189,27 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
   let models = [Student, SRC, Admin];
   let user = null;
   for await (let modelType of models) {
-    console.log('modelType', modelType);
-    const possibleUser = (await modelType
-      .findOneAndUpdate(
-        { emailVerificationCode, email, isEmailVerified: false },
-        { isEmailVerified: true },
-        { returnOriginal: false }
-      )
-      .catch((err: Error) => {
-        return err.message;
-      })) as IUser;
+    let possibleUser: IUser;
+    switch (modelType) {
+      case Student:
+        possibleUser = (await modelType
+          .findOneAndUpdate(
+            { emailVerificationCode, email, isEmailVerified: false },
+            { isEmailVerified: true },
+            { returnOriginal: false }
+          )
+          .catch((err: Error) => {
+            return err.message;
+          })) as IUser;
+        break;
+      case SRC:
+        possibleUser = (await modelType.findOne({
+          emailVerificationCode,
+          email,
+          isEmailVerified: false,
+        })) as IUser;
+    }
+
     if (possibleUser) {
       user = possibleUser;
       break;
@@ -199,13 +220,53 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
     return 'user not found';
   }
 
-  for (let modelType of models) {
-    const possibleUsers = await modelType
-      .deleteMany({ email, isEmailVerified: false })
+  if (user.isEmailVerified == false) {
+    console.log('choose password');
+    return 'choose password';
+  } else {
+    for (let modelType of models) {
+      const possibleUsers = await modelType
+        .deleteMany({ email, isEmailVerified: false })
+        .catch((err: Error) => {
+          return err.message;
+        });
+    }
+    return 'success';
+  }
+};
+
+const setPassword = async (email: string, password: string) => {
+  const salt = randomBytes(16).toString('hex');
+  const hash = createHash('sha256')
+    .update(salt + password)
+    .digest('hex');
+  const models = [SRC, Admin];
+  let user: IUser;
+  for await (let modelType of models) {
+    let possibleUser = await modelType
+      .findOneAndUpdate(
+        { email, isEmailVerified: false },
+        {
+          password: { salt, hash },
+          isEmailVerified: true,
+          hasSetPassword: true,
+        },
+        { returnOriginal: false }
+      )
       .catch((err: Error) => {
         return err.message;
       });
+
+    if (possibleUser) {
+      user = possibleUser as IUser;
+      break;
+    }
   }
+
+  if (!user) {
+    return 'user not found';
+  }
+
   return 'success';
 };
 
@@ -217,4 +278,5 @@ export {
   checkVerified,
   authenticateToken,
   verifyEmail,
+  setPassword,
 };

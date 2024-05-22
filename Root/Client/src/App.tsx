@@ -9,6 +9,8 @@ import CheckEmail from './Pages/CheckEmail.tsx';
 import StudentDashboard from './Pages/StudentDashboard.tsx';
 import Project from './Pages/Student/Project.tsx';
 import Projects from './Pages/Student/Projects.tsx';
+import SRCDashboard from './Pages/SRCDashboard.tsx';
+import ChoosePassword from './Pages/ChoosePassword.tsx';
 
 function App() {
   return (
@@ -23,7 +25,9 @@ function App() {
           <Route path='' element={<Projects />} />
           <Route path='project/:id/:status' element={<Project />} />
         </Route>
+        <Route path='/src' element={<SRCDashboard />} />
         <Route path='/checkEmail' element={<CheckEmail />} />
+        <Route path='/choosePassword' element={<ChoosePassword />} />
       </Routes>
     </div>
   );

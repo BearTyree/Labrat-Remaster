@@ -4,49 +4,19 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 function NavBar() {
   const navigate = useNavigate();
-  const [validToken, setValidToken] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    async function checkToken() {
-      if (token) {
-        const response = await fetch(
-          'http://localhost:3000/authenticateToken',
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (response.ok) {
-          console.log('Token valid');
-          setValidToken(true);
-        } else {
-          console.log('Token not valid');
-          localStorage.clear();
-          setValidToken(false);
-        }
-      }
-    }
-    checkToken();
-  }, [token]);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
     setToken(token);
-  }, []);
+  });
   return (
     <>
       <div
         className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end flex z-50  py-2 bg-white`}
       >
-        {localStorage.getItem('token') &&
-        validToken &&
-        localStorage.getItem('userType') == 'student' ? (
+        {(token && localStorage.getItem('userType') == 'student') ||
+        localStorage.getItem('userType') == 'src' ? (
           <>
             <NavLink
               className='ml-4 mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'

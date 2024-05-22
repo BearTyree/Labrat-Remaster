@@ -3,31 +3,26 @@ import { useNavigate } from 'react-router-dom';
 function CheckEmail() {
   const navigate = useNavigate();
   const handleClick = async () => {
-    const response = await fetch('http://localhost:3000/verify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(localStorage.getItem('email')),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      navigate(`/${localStorage.getItem('userType')}`);
-    } else {
-      alert(data.message);
-    }
+    navigate('/login');
   };
   return (
-    <div>
-      <h1>Click the link in your email to verify.</h1>
-      <h2>Check your spam folder if you don't see it.</h2>
-      <button
-        onClick={() => {
-          handleClick();
-        }}
-      >
-        Click Here if Verified
-      </button>
+    <div className='items-center justify-center h-full grow flex bg-slate-50'>
+      <div className='bg-white p-8 rounded-lg shadow-lg max-w-sm w-full'>
+        <h1 className='text-xl font-bold text-center mb-6'>
+          Click the link in your email to verify.
+        </h1>
+        <p>Check your spam folder if you don't see it.</p>
+        <h2>You can close this page now.</h2>
+
+        <button
+          className='mt-8 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          Click Here if Verified
+        </button>
+      </div>
     </div>
   );
 }

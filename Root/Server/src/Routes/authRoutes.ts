@@ -7,6 +7,7 @@ import {
   checkVerified,
   authenticateToken,
   verifyEmail,
+  setPassword,
 } from '../Controllers/authController';
 
 const router = Router();
@@ -22,15 +23,23 @@ router.post('/login', async (req, res) => {
   // check to make sure password is valid
   const passwordResult: unknown = await checkPassword(email, password);
 
-  if ((passwordResult as string) == 'success') {
-    // if password is valid, generate access token and send it
-    res.status(200).json({
-      token: await generateAccessToken(email),
-      userType: await getUserType(email),
-    });
-  } else {
-    // if password is invalid, send error message
-    res.status(401).json({ message: passwordResult });
+  switch (passwordResult as string) {
+    case 'success':
+      // if password is valid, generate access token and send it
+      res.status(200).json({
+        token: await generateAccessToken(email),
+        userType: await getUserType(email),
+        message: 'success',
+      });
+      break;
+    case 'not verified':
+      // if password is valid, generate access token and send it
+      res.status(200).json({ message: 'not verified' });
+      break;
+    default:
+      // if password is invalid, send error message
+      res.status(401).json({ message: passwordResult });
+      break;
   }
 });
 
@@ -55,7 +64,7 @@ router.post('/signup', async (req, res) => {
     classCode
   );
   if ((userResult as string) == 'success') {
-    res.status(200).json({ token: generateAccessToken(email) });
+    res.status(200).json({ token: await generateAccessToken(email) });
   } else {
     res.status(400).json({ message: userResult });
   }
@@ -109,10 +118,57 @@ router.post('/verify', async (req, res) => {
 
   const verified = await verifyEmail(email, emailVerificationCode);
 
-  if (verified == 'success') {
+  switch (verified) {
+    case 'success':
+      res.status(200).json({
+        message: 'success',
+        token: await generateAccessToken(email),
+        userType: await getUserType(email),
+      });
+      break;
+    case 'choose password':
+      res.status(200).json({
+        message: 'choose password',
+        token: await generateAccessToken(email),
+        userType: await getUserType(email),
+      });
+      break;
+    default:
+      res.status(400).json({ message: verified });
+      break;
+  }
+});
+
+router.post('/setPassword', async (req, res) => {
+  let token: string;
+  try {
+    const authHeader = req.headers['authorization'];
+    token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
+  } catch (err) {
+    console.log(err);
+  }
+
+  let password: string;
+  try {
+    ({ password } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const verified = await authenticateToken(token);
+
+  if (verified.message != 'email not verified') {
+    res.status(400).json({ message: verified });
+    return;
+  }
+
+  const newPassword = await setPassword(verified.email, password);
+
+  if (newPassword == 'success') {
     res.status(200).json({ message: 'success' });
   } else {
-    res.status(400).json({ message: verified });
+    res.status(400).json({ message: newPassword });
   }
 });
 

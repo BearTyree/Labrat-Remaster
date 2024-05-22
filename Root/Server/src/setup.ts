@@ -73,6 +73,7 @@ const createSchool = async (
       salt,
       hash,
     },
+    emailVerificationCode: randomBytes(16).toString('hex'),
     hasSetPassword: false,
   }).save();
 

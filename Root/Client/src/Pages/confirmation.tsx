@@ -21,7 +21,16 @@ function Confirmation() {
       });
       const data = await response.json();
       if (response.ok) {
-        navigate(`/login`);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userType', data.userType);
+        switch (data.message) {
+          case 'success':
+            navigate(`/${data.userType}`);
+            break;
+          case 'choose password':
+            navigate('/choosePassword');
+            break;
+        }
       } else {
         alert(data.message);
       }
@@ -29,7 +38,7 @@ function Confirmation() {
     verifyEmail();
   }, []);
 
-  return <div>dgfgd</div>;
+  return <div>Confirmation</div>;
 }
 
 export default Confirmation;

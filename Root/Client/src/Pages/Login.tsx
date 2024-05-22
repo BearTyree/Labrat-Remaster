@@ -46,17 +46,23 @@ function Login() {
 
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userType', data.userType);
-      navigate(`/${data.userType}`);
-      return;
+      switch (data.message) {
+        case 'success':
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('userType', data.userType);
+          navigate(`/${data.userType}`);
+          return;
+        case 'not verified':
+          navigate('/checkEmail');
+          return;
+      }
     } else {
       alert(data.message);
     }
   };
 
   return (
-    <div className='flex grow items-center justify-center h-full'>
+    <div className=' bg-slate-50 flex grow items-center justify-center h-full'>
       <div className='bg-white p-8 rounded-lg shadow-lg max-w-sm w-full'>
         <h1 className='text-xl font-bold text-center mb-6'>Login</h1>
         <form onSubmit={(e) => handleSubmit(e)}>
