@@ -134,7 +134,7 @@ router.post('/getProject', async (req, res) => {
     return;
   }
 
-  const project = await getProject(id);
+  const project = await getProject(id, verified.email);
 
   if (project.message == 'success') {
     res.status(200).json({ message: 'success', project: project.project });

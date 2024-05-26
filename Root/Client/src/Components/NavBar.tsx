@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import Styles from './NavBar.module.css';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 function NavBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setToken(token);
-  });
+  }, [location]);
   return (
     <>
       <div
@@ -20,7 +21,7 @@ function NavBar() {
           <>
             <NavLink
               className='ml-4 mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'
-              to='/student'
+              to={`/${localStorage.getItem('userType')}`}
             >
               Home
             </NavLink>

@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
 const teacherSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
     required: [true, 'Please enter a name'],
-    unique: [true, 'Username already exists'],
+    unique: false,
   },
   password: {
     type: {
@@ -16,11 +16,27 @@ const teacherSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Please enter an email'],
-    unique: [true, 'Email already exists'],
+    unique: false,
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerificationCode: {
+    type: String,
+    required: [true, 'Please enter an email verification code'],
+  },
+  hasSetPassword: {
+    type: Boolean,
+    required: [true, 'Please enter a password'],
   },
   classes: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'class',
+  },
+  school: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'school',
   },
 });
 

@@ -11,8 +11,25 @@ import Project from './Pages/Student/Project.tsx';
 import Projects from './Pages/Student/Projects.tsx';
 import SRCDashboard from './Pages/SRCDashboard.tsx';
 import ChoosePassword from './Pages/ChoosePassword.tsx';
+import Teachers from './Pages/SRC/Teachers.tsx';
+import Teacher from './Pages/SRC/Teacher.tsx';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (
+      localStorage.getItem('userType') &&
+      !location.pathname.includes(localStorage.getItem('userType') as string) &&
+      !location.pathname.includes('checkEmail')
+    ) {
+      console.log('here');
+      navigate(`/${localStorage.getItem('userType')}`);
+    }
+  }, [location]);
   return (
     <div className={`${Styles.app} grow flex flex-col`}>
       <NavBar />
@@ -25,9 +42,12 @@ function App() {
           <Route path='' element={<Projects />} />
           <Route path='project/:id/:status' element={<Project />} />
         </Route>
-        <Route path='/src' element={<SRCDashboard />} />
+        <Route path='/src' element={<SRCDashboard />}>
+          <Route path='' element={<Teachers />} />
+          <Route path='teacher/:id/:status' element={<Teacher />} />
+          <Route path='choosePassword' element={<ChoosePassword />} />
+        </Route>
         <Route path='/checkEmail' element={<CheckEmail />} />
-        <Route path='/choosePassword' element={<ChoosePassword />} />
       </Routes>
     </div>
   );

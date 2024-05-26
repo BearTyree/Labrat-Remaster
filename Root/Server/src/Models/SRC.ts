@@ -6,7 +6,7 @@ const SRCSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [false, 'Please enter a name'],
-    unique: [true, 'Username already exists'],
+    unique: false,
   },
   password: {
     type: {

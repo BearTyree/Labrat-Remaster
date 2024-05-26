@@ -47,12 +47,13 @@ const updateProject = async (id: string, name: string, description: string) => {
   }
 };
 
-const getProject = async (id: string) => {
+const getProject = async (id: string, email: string) => {
   try {
     let project = await Project.findById(id).catch((err: Error) => {
       return err.message;
     });
-    if (project) {
+    let student = await Student.find({ email, projects: { $in: project } });
+    if (project && student) {
       return { message: 'success', project };
     } else {
       throw new Error('Project not found');

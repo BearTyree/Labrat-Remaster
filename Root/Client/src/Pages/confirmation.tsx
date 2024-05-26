@@ -28,7 +28,7 @@ function Confirmation() {
             navigate(`/${data.userType}`);
             break;
           case 'choose password':
-            navigate('/choosePassword');
+            navigate(`/${data.userType}/choosePassword`);
             break;
         }
       } else {
