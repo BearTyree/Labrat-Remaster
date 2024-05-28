@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { IUser } from '../Interfaces/user.interface';
+import IUser from '../Interfaces/user.interface';
 
 const SRCSchema = new mongoose.Schema({
   name: {

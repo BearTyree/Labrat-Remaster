@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import IUser from '../Interfaces/user.interface';
 
 const teacherSchema = new mongoose.Schema({
   name: {
@@ -40,6 +41,6 @@ const teacherSchema = new mongoose.Schema({
   },
 });
 
-const Teacher = mongoose.model('teacher', teacherSchema);
+const Teacher = mongoose.model<IUser>('teacher', teacherSchema);
 
 export default Teacher;

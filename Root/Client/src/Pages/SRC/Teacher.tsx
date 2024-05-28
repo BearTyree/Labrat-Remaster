@@ -13,6 +13,13 @@ function Teacher() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (
+      params.status == 'create' &&
+      (teacherName == '' || teacherEmail == '')
+    ) {
+      navigate('/src');
+      return;
+    }
     const response = await fetch('http://localhost:3000/updateTeacher', {
       method: 'POST',
       headers: {
@@ -79,7 +86,7 @@ function Teacher() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this project?'))
+    if (!window.confirm('Are you sure you want to delete this teacher?'))
       return;
     const response = await fetch('http://localhost:3000/deleteTeacher', {
       method: 'POST',

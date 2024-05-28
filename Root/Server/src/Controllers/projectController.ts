@@ -1,6 +1,6 @@
 import Project from '../Models/Project';
 import Student from '../Models/Student';
-import { IUser } from '../Interfaces/user.interface';
+import IUser from '../Interfaces/user.interface';
 import Mongoose, { Schema } from 'mongoose';
 
 const createProject = async (name: string, email: string) => {

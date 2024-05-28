@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function choosePassword() {
+function ChoosePassword() {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,4 +53,4 @@ function choosePassword() {
   );
 }
 
-export default choosePassword;
+export default ChoosePassword;

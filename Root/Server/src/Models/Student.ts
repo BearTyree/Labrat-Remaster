@@ -1,5 +1,5 @@
 import mongoose, { MongooseError } from 'mongoose';
-import { IUser } from '../Interfaces/user.interface';
+import IUser from '../Interfaces/user.interface';
 
 const studentSchema = new mongoose.Schema({
   name: {

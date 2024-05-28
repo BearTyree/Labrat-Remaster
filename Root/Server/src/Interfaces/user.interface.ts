@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
 
-export interface IUser extends Document {
+export default interface IUser extends Document {
   name: string;
   password: {
     salt: string;

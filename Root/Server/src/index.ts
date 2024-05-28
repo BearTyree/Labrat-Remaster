@@ -29,6 +29,8 @@ import authRoutes from './Routes/authRoutes';
 app.use(authRoutes);
 import projectRoutes from './Routes/projectRoutes';
 app.use(projectRoutes);
+import teacherRoutes from './Routes/teacherRoutes';
+app.use(teacherRoutes);
 
 // import Class from './Models/Class';
 
