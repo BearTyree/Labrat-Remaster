@@ -1,15 +1,20 @@
-import jwt from 'jsonwebtoken';
+// mongoose schemas
 import Student from '../Models/Student';
-import Class from '../Models/Class';
 import SRC from '../Models/SRC';
 import Admin from '../Models/Admin';
-import { createHash, randomBytes } from 'crypto';
-import Teacher from '../Models/Teacher';
-import { Types } from 'mongoose';
-import config from 'config';
 import School from '../Models/School';
-import IUser from '../Interfaces/user.interface';
+import Teacher from '../Models/Teacher';
+
+// config file
+import config from 'config';
 const appConfig = config;
+
+// types
+import IUser from '../Interfaces/user.interface';
+import ITeacher from '../Interfaces/teacher.interface';
+
+// cryptography
+import { createHash, randomBytes } from 'crypto';
 
 const createTeacher = async (name: string, email: string) => {
   const schoolSRC = (await SRC.findOne({ email }).catch((err: Error) => {
@@ -75,19 +80,7 @@ const getTeachers = async (email: string) => {
 
   return { message: 'success', teachers };
 };
-interface ITeacher extends Document {
-  name: string;
-  password: {
-    salt?: string;
-    hash?: string;
-  };
-  email: string;
-  isEmailVerified: boolean;
-  emailVerificationCode: string;
-  hasSetPassword: boolean;
-  classes: Types.ObjectId[];
-  school?: Types.ObjectId;
-}
+
 const updateTeacher = async (id: string, name: string, email: string) => {
   try {
     const schoolSRC = (await SRC.findOne({ email }).catch((err: Error) => {

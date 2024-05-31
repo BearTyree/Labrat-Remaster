@@ -10,4 +10,5 @@ export default interface IUser extends Document {
   isEmailVerified: boolean;
   emailVerificationCode?: string;
   projects?: Types.ObjectId[];
+  _id: string;
 }

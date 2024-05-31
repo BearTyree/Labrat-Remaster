@@ -1,37 +1,30 @@
-import jwt from 'jsonwebtoken';
+// mongoose schemas
 import Student from '../Models/Student';
 import Class from '../Models/Class';
 import SRC from '../Models/SRC';
 import Admin from '../Models/Admin';
-import { createHash, randomBytes } from 'crypto';
 import Teacher from '../Models/Teacher';
-import { Types } from 'mongoose';
-import config from 'config';
-import School from '../Models/School';
 
+// authentication and cryptography
+import { createHash, randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
+
+// config file
+import config from 'config';
 const appConfig = config;
 
-interface IUser {
-  name: string;
-  password: {
-    salt: string;
-    hash: string;
-  };
-  email: string;
-  isEmailVerified: boolean;
-  _id: string;
-}
+// types
+import IUser from '../Interfaces/user.interface';
 
 const checkPassword = async (email: string, password: string) => {
   // all possible user types
-
-  let models = [Student, SRC, Admin];
+  let models = [Student, SRC, Admin, Teacher];
   let user = null;
   // check all user types for user
   for (let modelType of models) {
     let possibleUsers = (await modelType.find({ email }).catch((err: Error) => {
       return err.message;
-    })) as IUser[]; // Cast possibleUser as IUser
+    })) as IUser[];
 
     for (let possibleUser of possibleUsers) {
       if (possibleUser) {
