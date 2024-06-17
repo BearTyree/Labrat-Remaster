@@ -77,7 +77,7 @@ const createSchool = async (
     hasSetPassword: false,
   }).save();
 
-  new School({
+  await new School({
     name: name,
     phoneNumber: phoneNumber,
     address: address,

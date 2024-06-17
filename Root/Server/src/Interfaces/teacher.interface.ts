@@ -10,6 +10,5 @@ export default interface ITeacher extends Document {
   isEmailVerified: boolean;
   emailVerificationCode: string;
   hasSetPassword: boolean;
-  classes: Types.ObjectId[];
   school?: Types.ObjectId;
 }

@@ -12,7 +12,9 @@ import Projects from './Pages/Student/Projects.tsx';
 import SRCDashboard from './Pages/SRCDashboard.tsx';
 import ChoosePassword from './Pages/ChoosePassword.tsx';
 import Teachers from './Pages/SRC/Teachers.tsx';
-import Teacher from './Pages/SRC/Teacher.tsx';
+import CreateTeacher from './Pages/SRC/CreateTeacher.tsx';
+import TeacherDashboard from './Pages/TeacherDashboard.tsx';
+import Classes from './Pages/Teacher/Classes.tsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -44,10 +46,14 @@ function App() {
         </Route>
         <Route path='/src' element={<SRCDashboard />}>
           <Route path='' element={<Teachers />} />
-          <Route path='teacher/:id/:status' element={<Teacher />} />
+          <Route path='teacher/:id/create' element={<CreateTeacher />} />
+          <Route path='teacher/:id/classes/:status?' element={<Classes />} />
           <Route path='choosePassword' element={<ChoosePassword />} />
         </Route>
         <Route path='/checkEmail' element={<CheckEmail />} />
+        <Route path='/teacher' element={<TeacherDashboard />}>
+          <Route path='choosePassword' element={<ChoosePassword />} />
+        </Route>
       </Routes>
     </div>
   );

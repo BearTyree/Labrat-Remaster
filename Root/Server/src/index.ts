@@ -31,6 +31,10 @@ import projectRoutes from './Routes/projectRoutes';
 app.use(projectRoutes);
 import teacherRoutes from './Routes/teacherRoutes';
 app.use(teacherRoutes);
+import srcRoutes from './Routes/srcRoutes';
+app.use(srcRoutes);
+import classRoutes from './Routes/classRoutes';
+app.use(classRoutes);
 
 // import Class from './Models/Class';
 

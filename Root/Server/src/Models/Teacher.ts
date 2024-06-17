@@ -31,10 +31,6 @@ const teacherSchema = new mongoose.Schema({
     type: Boolean,
     required: [true, 'Please enter a password'],
   },
-  classes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'class',
-  },
   school: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'school',

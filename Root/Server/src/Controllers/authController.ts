@@ -56,7 +56,7 @@ const checkPassword = async (email: string, password: string) => {
 
 const getUserType = async (email: string) => {
   // all possible user types
-  let models = [Student, SRC, Admin];
+  let models = [Student, SRC, Admin, Teacher];
   let user = null;
   // check all user types for user
   for (let modelType of models) {
@@ -134,7 +134,7 @@ const createUser = async (
 };
 
 const checkVerified = async (email: string) => {
-  let models = [Student, SRC, Admin];
+  let models = [Student, SRC, Admin, Teacher];
   let user = null;
   // check all user types for user
   for (let modelType of models) {
@@ -185,7 +185,7 @@ const authenticateToken = async (token: string) => {
 
 const verifyEmail = async (email: string, emailVerificationCode: string) => {
   // find user with emailVerificationCode
-  let models = [Student, SRC, Admin];
+  let models = [Student, SRC, Admin, Teacher];
   let user = null;
   for await (let modelType of models) {
     let possibleUser: IUser;
@@ -207,6 +207,14 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
           email,
           isEmailVerified: false,
         })) as IUser;
+        break;
+      case Teacher:
+        possibleUser = (await modelType.findOne({
+          emailVerificationCode,
+          email,
+          isEmailVerified: false,
+        })) as IUser;
+        break;
     }
 
     if (possibleUser) {
@@ -239,7 +247,7 @@ const setPassword = async (email: string, password: string) => {
   const hash = createHash('sha256')
     .update(salt + password)
     .digest('hex');
-  const models = [SRC, Admin];
+  const models = [SRC, Admin, Teacher];
   let user: IUser;
   for await (let modelType of models) {
     let possibleUser = await modelType

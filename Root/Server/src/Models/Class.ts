@@ -4,12 +4,15 @@ const classSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please enter a name'],
-    unique: [true, 'Class name already exists'],
   },
   code: {
     type: String,
     required: [true, 'Please enter a code'],
     unique: [true, 'Class code already exists'],
+  },
+  teacher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'teacher',
   },
 });
 

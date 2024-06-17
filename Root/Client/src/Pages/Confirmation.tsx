@@ -6,6 +6,7 @@ function Confirmation() {
   const params = useParams();
 
   useEffect(() => {
+    const controller = new AbortController();
     console.log(params);
     async function verifyEmail() {
       console.log(params);
@@ -18,6 +19,7 @@ function Confirmation() {
           email: params.email,
           emailVerificationCode: params.code,
         }),
+        signal: controller.signal,
       });
       const data = await response.json();
       if (response.ok) {
@@ -36,6 +38,9 @@ function Confirmation() {
       }
     }
     verifyEmail();
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return <div>Confirmation</div>;

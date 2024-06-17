@@ -17,7 +17,8 @@ function NavBar() {
         className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end flex z-50  py-2 bg-white`}
       >
         {(token && localStorage.getItem('userType') == 'student') ||
-        localStorage.getItem('userType') == 'src' ? (
+        localStorage.getItem('userType') == 'src' ||
+        (token && localStorage.getItem('userType') == 'teacher') ? (
           <>
             <NavLink
               className='ml-4 mx-3 mr-auto justify-self-end bg-white hover:bg-slate-50 text-black py-2 px-4 rounded-full'

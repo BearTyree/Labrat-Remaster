@@ -1,8 +1,8 @@
 import { IoCaretBackOutline } from 'react-icons/io5';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-function Teacher() {
+function CreateTeacher() {
   const [teacherName, setTeacherName] = useState('');
   const [oldTeacherName, setOldTeacherName] = useState('');
   const [teacherEmail, setTeacherEmail] = useState('');
@@ -10,11 +10,13 @@ function Teacher() {
 
   const navigate = useNavigate();
   const params = useParams();
+  const location = useLocation();
+  const pathSegments = location.pathname.split('/');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
-      params.status == 'create' &&
+      pathSegments[pathSegments.length - 1] === 'create' &&
       (teacherName == '' || teacherEmail == '')
     ) {
       navigate('/src');
@@ -107,6 +109,7 @@ function Teacher() {
       console.log(data);
     }
   };
+
   return (
     <>
       <div
@@ -115,11 +118,12 @@ function Teacher() {
       >
         <IoCaretBackOutline size='3em' color='DarkGray' />
       </div>
+
       <div className='grow bg-slate-50 flex p-10 justify-center'>
         <div className='bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full'>
-          <h1 className='text-xl font-bold text-center mb-6'>
-            {params.status == 'edit' ? 'Edit ' + teacherName : 'New Teacher'}
-          </h1>
+          <div className='flex align-middle justify-center'>
+            <h1 className='text-xl font-bold text-center mb-6'>New Teacher</h1>
+          </div>
           <form onSubmit={(e) => handleSubmit(e)}>
             <div className='mb-4'>
               <label
@@ -135,7 +139,6 @@ function Teacher() {
                 }}
                 type='text'
                 placeholder='Teacher Name'
-                {...(params.status == 'edit' ? { value: teacherName } : {})}
               />
             </div>
             <div className='mb-6'>
@@ -152,7 +155,6 @@ function Teacher() {
                 }}
                 type='text'
                 placeholder='Teacher Email'
-                {...(params.status == 'edit' ? { value: teacherEmail } : {})}
               />
             </div>
 
@@ -160,7 +162,7 @@ function Teacher() {
               className='w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
               type='submit'
             >
-              {params.status == 'create' ? 'Create Teacher' : 'Update Teacher'}
+              Create Teacher
             </button>
           </form>{' '}
           <button
@@ -169,7 +171,7 @@ function Teacher() {
               handleDelete();
             }}
           >
-            {params.status == 'create' ? 'Cancel' : 'Delete Teacher'}
+            Cancel
           </button>
         </div>
       </div>
@@ -177,4 +179,4 @@ function Teacher() {
   );
 }
 
-export default Teacher;
+export default CreateTeacher;

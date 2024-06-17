@@ -67,16 +67,17 @@ const getTeachers = async (email: string) => {
   const schoolSRC = (await SRC.findOne({ email }).catch((err: Error) => {
     return err.message;
   })) as IUser;
-  const teacherSchool = await School.findOne({ schoolSRC }).catch(
+  const teacherSchool: any = await School.findOne({ SRC: schoolSRC }).catch(
     (err: Error) => {
       return err.message;
     }
   );
-  const teachers = await Teacher.find({ school: teacherSchool }).catch(
-    (err: Error) => {
-      return { message: err.message };
-    }
-  );
+
+  const teachers = await Teacher.find({
+    school: teacherSchool,
+  }).catch((err: Error) => {
+    return { message: err.message };
+  });
 
   return { message: 'success', teachers };
 };
@@ -86,7 +87,7 @@ const updateTeacher = async (id: string, name: string, email: string) => {
     const schoolSRC = (await SRC.findOne({ email }).catch((err: Error) => {
       return err.message;
     })) as IUser;
-    const teacherSchool = await School.findOne({ schoolSRC }).catch(
+    const teacherSchool: any = await School.findOne({ schoolSRC }).catch(
       (err: Error) => {
         return err.message;
       }
@@ -94,13 +95,15 @@ const updateTeacher = async (id: string, name: string, email: string) => {
     let teacher = (await Teacher.findById(id).catch((err: Error) => {
       return err.message;
     })) as unknown as ITeacher;
-    if ((teacher.school as unknown) == teacherSchool) {
+    if (
+      (teacher.school.toString() as unknown) == teacherSchool._id.toString()
+    ) {
       try {
         const modelTypes = [Student, SRC, Admin, Teacher];
         let alreadyExists = false;
         for await (let modelType of modelTypes) {
           let possibleUser = (await modelType
-            .findOne({ email })
+            .findOne({ email, _id: { $ne: id } })
             .catch((err: Error) => {
               return err.message;
             })) as IUser;
@@ -140,7 +143,7 @@ const getTeacher = async (id: string, email: string) => {
     const schoolSRC = (await SRC.findOne({ email }).catch((err: Error) => {
       return err.message;
     })) as IUser;
-    const teacherSchool = await School.findOne({ schoolSRC }).catch(
+    const teacherSchool: any = await School.findOne({ SRC: schoolSRC }).catch(
       (err: Error) => {
         return err.message;
       }
@@ -150,7 +153,9 @@ const getTeacher = async (id: string, email: string) => {
     })) as unknown as ITeacher;
 
     if (teacher) {
-      if ((teacher.school as unknown) == teacherSchool) {
+      if (
+        (teacher.school.toString() as unknown) == teacherSchool._id.toString()
+      ) {
         return { message: 'success', teacher };
       } else {
         throw new Error('Not accessible from your account');
@@ -159,6 +164,7 @@ const getTeacher = async (id: string, email: string) => {
       throw new Error('Teacher not found');
     }
   } catch (err) {
+    console.log(err);
     return { message: err.message };
   }
 };
@@ -168,7 +174,7 @@ const deleteTeacher = async (id: string, email: string) => {
     const schoolSRC = (await SRC.findOne({ email }).catch((err: Error) => {
       return err.message;
     })) as IUser;
-    const teacherSchool = await School.findOne({ schoolSRC }).catch(
+    const teacherSchool: any = await School.findOne({ SRC: schoolSRC }).catch(
       (err: Error) => {
         return err.message;
       }
@@ -178,7 +184,9 @@ const deleteTeacher = async (id: string, email: string) => {
     })) as unknown as ITeacher;
 
     if (teacher) {
-      if ((teacher.school as unknown) == teacherSchool) {
+      if (
+        (teacher.school.toString() as unknown) == teacherSchool._id.toString()
+      ) {
         await Teacher.findByIdAndDelete(id).catch((err: Error) => {
           return err.message;
         });

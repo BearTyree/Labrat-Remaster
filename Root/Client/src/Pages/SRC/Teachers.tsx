@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { MdModeEdit } from 'react-icons/md';
 interface Teacher {
   _id: string;
   name: string;
@@ -9,6 +10,32 @@ interface Teacher {
 function Teachers() {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
+  // const [src, setSRC] = useState({});
+  const [school, setSchool] = useState({ name: '' });
+  const getSRC = async () => {
+    const response = await fetch('http://localhost:3000/getSRC', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data);
+      // setSRC(data.src);
+      setSchool(data.school);
+    } else {
+      console.log('SRC not found');
+      console.log(data);
+      if (data.message == 'jwt expired') {
+        localStorage.clear();
+        navigate('/login');
+        alert('Session expired. Please log in again.');
+      }
+    }
+  };
+
   const newTeacher = async () => {
     const response = await fetch('http://localhost:3000/newTeacher', {
       method: 'POST',
@@ -62,11 +89,15 @@ function Teachers() {
 
   useEffect(() => {
     getTeachers();
+    getSRC();
   }, []);
   return (
     <div className=' bg-slate-50 grow h-x'>
       <div className='pt-16 px-32'>
-        <h1 className='text-4xl text-left pt-16'>Teachers</h1>
+        <h1 className='text-4xl text-left pt-16 flex align-middle'>
+          {school.name} Teachers &nbsp;
+          <MdModeEdit className='cursor-pointer' />
+        </h1>
       </div>
       <div className='flex px-32 py-16'>
         <input className='mr-2 mt-1 w-96 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
@@ -90,7 +121,7 @@ function Teachers() {
               className='cursor-pointer transition hover:scale-105 p-4 shadow-lg rounded-md h-24 bg-white'
               key={teacher._id}
               onClick={() => {
-                navigate('/src/teacher/' + teacher._id + '/edit');
+                navigate('/src/teacher/' + teacher._id + '/classes');
               }}
             >
               <h1>{teacher.name}</h1>
