@@ -17,6 +17,7 @@ import TeacherDashboard from './Pages/TeacherDashboard.tsx';
 import Classes from './Pages/Teacher/Classes.tsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import CreateClass from './Pages/Teacher/CreateClass.tsx';
 
 function App() {
   const navigate = useNavigate();
@@ -48,6 +49,10 @@ function App() {
           <Route path='' element={<Teachers />} />
           <Route path='teacher/:id/create' element={<CreateTeacher />} />
           <Route path='teacher/:id/classes/:status?' element={<Classes />} />
+          <Route
+            path='teacher/:id/class/:classId/:create'
+            element={<CreateClass />}
+          />
           <Route path='choosePassword' element={<ChoosePassword />} />
         </Route>
         <Route path='/checkEmail' element={<CheckEmail />} />

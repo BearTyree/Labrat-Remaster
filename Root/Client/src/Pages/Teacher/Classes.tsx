@@ -57,7 +57,8 @@ function Classes() {
     const data = await response.json();
     if (response.ok) {
       console.log('Class created');
-      getClasses();
+      console.log(data);
+      return data.newClass._id;
     } else {
       console.log('Class not created');
       console.log(data);
@@ -127,7 +128,13 @@ function Classes() {
           <button
             className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
             onClick={async () => {
-              createClass();
+              const id = await createClass();
+              getClasses();
+              const segments = location.pathname.split('/');
+              segments.pop();
+              let newPath = segments.join('/');
+              newPath += '/class/' + id + '/create';
+              navigate(newPath);
             }}
           >
             New Class

@@ -1,5 +1,5 @@
 import { IoCaretBackOutline } from 'react-icons/io5';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function CreateTeacher() {
@@ -10,15 +10,10 @@ function CreateTeacher() {
 
   const navigate = useNavigate();
   const params = useParams();
-  const location = useLocation();
-  const pathSegments = location.pathname.split('/');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      pathSegments[pathSegments.length - 1] === 'create' &&
-      (teacherName == '' || teacherEmail == '')
-    ) {
+    if (teacherName == '' || teacherEmail == '') {
       navigate('/src');
       return;
     }

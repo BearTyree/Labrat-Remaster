@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { authenticateToken } from '../Controllers/authController';
-import { getClasses, createClass } from '../Controllers/classController';
+import {
+  getClasses,
+  createClass,
+  updateClass,
+} from '../Controllers/classController';
 const router = Router();
 
 router.post('/getClasses', async (req, res) => {
@@ -69,6 +73,42 @@ router.post('/newClass', async (req, res) => {
     res.status(200).json({ message: 'success', newClass: newClass.newClass });
   } else {
     res.status(400).json({ message: newClass });
+  }
+});
+
+router.post('/updateClass', async (req, res) => {
+  let token: string;
+  try {
+    const authHeader = req.headers['authorization'];
+    token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const verified = await authenticateToken(token);
+
+  if (verified.message != 'success') {
+    res.status(400).json({ message: verified });
+  }
+
+  let classId: string;
+  let name: string;
+  let code: string;
+
+  try {
+    ({ classId, name, code } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const updatedClass = await updateClass(classId, name, code, verified.email);
+
+  if (updatedClass.message == 'success') {
+    res.status(200).json({ message: 'success' });
+  } else {
+    res.status(400).json({ message: updatedClass });
   }
 });
 

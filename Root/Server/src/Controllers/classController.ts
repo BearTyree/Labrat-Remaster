@@ -6,6 +6,7 @@ import SRC from '../Models/SRC';
 import ITeacher from '../Interfaces/teacher.interface';
 import IUser from '../Interfaces/user.interface';
 import ISchool from '../Interfaces/school.interface';
+import IClass from '../Interfaces/class.interface';
 
 const getClasses = async (teacherId: string, email: string) => {
   const teacher = (await Teacher.findById(teacherId).catch((err: Error) => {
@@ -129,4 +130,23 @@ const createClass = async (
   }
 };
 
-export { getClasses, createClass };
+const updateClass = async (
+  id: string,
+  name: string,
+  code: string,
+  email: string
+) => {
+  const currentClass = (await Class.findById(id).catch((err: Error) => {
+    return { message: err.message };
+  })) as unknown as IClass;
+  if (!currentClass) {
+    return { message: 'Class not found' };
+  }
+  const teacher = (await Teacher.findById(currentClass.teacher).catch(
+    (err: Error) => {
+      return { message: err.message };
+    }
+  )) as unknown as ITeacher;
+};
+
+export { getClasses, createClass, updateClass };
