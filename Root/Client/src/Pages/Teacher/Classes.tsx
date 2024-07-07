@@ -145,6 +145,13 @@ function Classes() {
             return (
               <div
                 className='cursor-pointer transition hover:scale-105 p-4 shadow-lg rounded-md h-24 bg-white'
+                onClick={() => {
+                  const segments = location.pathname.split('/');
+                  segments.pop();
+                  let newPath = segments.join('/');
+                  newPath += '/class/' + cls._id;
+                  navigate(newPath);
+                }}
                 key={cls._id}
               >
                 <h1>{cls.name}</h1>

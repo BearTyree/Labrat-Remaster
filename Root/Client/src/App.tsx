@@ -18,6 +18,7 @@ import Classes from './Pages/Teacher/Classes.tsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import CreateClass from './Pages/Teacher/CreateClass.tsx';
+import ClassProjects from './Pages/Class/Projects.tsx';
 
 function App() {
   const navigate = useNavigate();
@@ -52,6 +53,10 @@ function App() {
           <Route
             path='teacher/:id/class/:classId/:create'
             element={<CreateClass />}
+          />
+          <Route
+            path='teacher/:id/class/:classId'
+            element={<ClassProjects />}
           />
           <Route path='choosePassword' element={<ChoosePassword />} />
         </Route>

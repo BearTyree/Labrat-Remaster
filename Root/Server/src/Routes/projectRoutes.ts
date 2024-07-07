@@ -44,7 +44,7 @@ router.post('/newProject', async (req, res) => {
   }
 });
 
-router.get('/getProjects', async (req, res) => {
+router.post('/getProjects', async (req, res) => {
   let token: string;
   try {
     const authHeader = req.headers['authorization'];
@@ -62,12 +62,23 @@ router.get('/getProjects', async (req, res) => {
     return;
   }
 
-  const projects = await getProjects(verified.email);
+  let id: string = null;
 
-  if (projects.message == 'success') {
-    res.status(200).json({ message: 'success', projects: projects.projects });
-  } else {
-    res.status(400).json({ message: projects });
+  try {
+    ({ id } = req.body);
+  } catch (err) {
+    console.log(err);
+  }
+
+  const projects = await getProjects(verified.email, id);
+  try {
+    if (projects.message == 'success') {
+      res.status(200).json({ message: 'success', projects: projects.projects });
+    } else {
+      res.status(400).json({ message: projects });
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 

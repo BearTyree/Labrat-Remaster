@@ -37,7 +37,7 @@ function Projects() {
   };
   const getProjects = async () => {
     const response = await fetch('http://localhost:3000/getProjects', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',

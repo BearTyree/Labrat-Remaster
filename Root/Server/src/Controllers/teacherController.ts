@@ -164,7 +164,6 @@ const getTeacher = async (id: string, email: string) => {
       throw new Error('Teacher not found');
     }
   } catch (err) {
-    console.log(err);
     return { message: err.message };
   }
 };

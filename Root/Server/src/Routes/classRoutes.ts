@@ -22,6 +22,7 @@ router.post('/getClasses', async (req, res) => {
 
   if (verified.message != 'success') {
     res.status(400).json({ message: verified });
+    return;
   }
 
   let teacherId: string;
@@ -93,22 +94,27 @@ router.post('/updateClass', async (req, res) => {
     res.status(400).json({ message: verified });
   }
 
-  let classId: string;
+  let id: string;
   let name: string;
   let code: string;
 
   try {
-    ({ classId, name, code } = req.body);
+    ({ id, name, code } = req.body);
   } catch (err) {
     console.log(err);
   }
 
-  const updatedClass = await updateClass(classId, name, code, verified.email);
+  const updatedClass = await updateClass(id, name, code, verified.email);
 
-  if (updatedClass.message == 'success') {
-    res.status(200).json({ message: 'success' });
-  } else {
-    res.status(400).json({ message: updatedClass });
+  try {
+    if (updatedClass.message == 'success') {
+      res.status(200).json({ message: 'success' });
+    } else {
+      res.status(400).json({ message: updatedClass });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: err });
   }
 });
 

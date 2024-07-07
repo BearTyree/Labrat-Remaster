@@ -9,49 +9,56 @@ import ISchool from '../Interfaces/school.interface';
 import IClass from '../Interfaces/class.interface';
 
 const getClasses = async (teacherId: string, email: string) => {
-  const teacher = (await Teacher.findById(teacherId).catch((err: Error) => {
-    return { message: err.message };
-  })) as unknown as ITeacher;
-  if (teacher.email != email) {
-    const models = [SRC];
-    let emailAccount: any;
-    let modelType: any;
-    for (let model of models) {
-      const possibleAccount = (await model
-        .findOne({ email })
-        .catch((err: Error) => {
-          return { message: err.message };
-        })) as IUser;
-      if (possibleAccount) {
-        emailAccount = possibleAccount;
-        modelType = model;
-        break;
+  try {
+    const teacher = (await Teacher.findById(teacherId).catch((err: Error) => {
+      return { message: err.message };
+    })) as unknown as ITeacher;
+
+    if (teacher.email != email) {
+      const models = [SRC];
+      let emailAccount: any;
+      let modelType: any;
+      for (let model of models) {
+        const possibleAccount = (await model
+          .findOne({ email })
+          .catch((err: Error) => {
+            return { message: err.message };
+          })) as IUser;
+        if (possibleAccount) {
+          emailAccount = possibleAccount;
+          modelType = model;
+          break;
+        }
+      }
+
+      switch (modelType) {
+        case SRC:
+          const school = (await School.findOne({ SRC: emailAccount._id }).catch(
+            (err: Error) => {
+              return { message: err.message };
+            }
+          )) as unknown as ISchool;
+
+          if (teacher.school.toString() != school._id.toString()) {
+            return { message: 'Not accessible from your account' };
+          }
       }
     }
 
-    switch (modelType) {
-      case SRC:
-        const school = (await School.findOne({ SRC: emailAccount }).catch(
-          (err: Error) => {
-            return { message: err.message };
-          }
-        )) as unknown as ISchool;
-        if (teacher.school.toString() != school._id.toString()) {
-          return { message: 'Not accessible from your account' };
-        }
+    const classes = await Class.find({ teacher })
+      .select('name code')
+      .catch((err: Error) => {
+        return err.message;
+      });
+
+    if (classes) {
+      return { message: 'success', classes };
+    } else {
+      return { message: 'Classes not found' };
     }
-  }
-
-  const classes = await Class.find({ teacher })
-    .select('name code')
-    .catch((err: Error) => {
-      return err.message;
-    });
-
-  if (classes) {
-    return { message: 'success', classes };
-  } else {
-    return { message: 'Classes not found' };
+  } catch (err) {
+    console.log(err);
+    return { message: err };
   }
 };
 
@@ -147,6 +154,49 @@ const updateClass = async (
       return { message: err.message };
     }
   )) as unknown as ITeacher;
+  if (teacher.email != email) {
+    const models = [SRC];
+    let emailAccount: any;
+    let modelType: any;
+    for (let model of models) {
+      const possibleAccount = (await model
+        .findOne({ email })
+        .catch((err: Error) => {
+          return { message: err.message };
+        })) as IUser;
+      if (possibleAccount) {
+        emailAccount = possibleAccount;
+        modelType = model;
+        break;
+      }
+    }
+
+    switch (modelType) {
+      case SRC:
+        const school = (await School.findOne({ SRC: emailAccount }).catch(
+          (err: Error) => {
+            return { message: err.message };
+          }
+        )) as unknown as ISchool;
+        if (teacher.school.toString() != school._id.toString()) {
+          return { message: 'Not accessible from your account' };
+        }
+    }
+  }
+
+  if (name != null) {
+    currentClass.name = name;
+  }
+  if (code != null) {
+    currentClass.code = code;
+  }
+
+  try {
+    await currentClass.save();
+    return { message: 'success', currentClass };
+  } catch (err) {
+    return { message: err.message };
+  }
 };
 
 export { getClasses, createClass, updateClass };
