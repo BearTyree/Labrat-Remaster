@@ -1,10 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { IoCaretBackOutline } from 'react-icons/io5';
+import { mainStore } from '../../GlobalStore.tsx';
+import { studentStore } from '../../GlobalStore.tsx';
 
 function Project() {
   const navigate = useNavigate();
   const params = useParams();
+  const { setSessionExpired } = mainStore();
   const [projectName, setProjectName] = useState('New Project');
   const [oldProjectName, setOldProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
@@ -32,10 +35,19 @@ function Project() {
       alert(data.message);
     }
   };
-
-  useEffect(() => {
-    console.log(params);
+  const { projects: projectsCache } = studentStore();
+  useLayoutEffect(() => {
     const getProjectDetails = async () => {
+      if (projectsCache) {
+        const project = projectsCache.find(
+          (project: { [key: string]: string }) => project._id == params.id
+        );
+        setProjectName(project.name);
+        setOldProjectName(project.name);
+        setProjectDescription(project.description);
+        setOldProjectDescription(project.description);
+        return;
+      }
       const response = await fetch(`http://localhost:3000/getProject`, {
         method: 'POST',
         headers: {
@@ -54,9 +66,7 @@ function Project() {
         setOldProjectDescription(data.project.description);
       } else {
         if (data.message == 'jwt expired') {
-          localStorage.clear();
-          navigate('/login');
-          alert('Session expired. Please log in again.');
+          setSessionExpired(() => true);
         }
       }
     };

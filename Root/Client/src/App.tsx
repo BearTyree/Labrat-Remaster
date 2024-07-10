@@ -1,4 +1,3 @@
-import Styles from './App.module.css';
 import NavBar from './Components/NavBar';
 import { Route, Routes } from 'react-router-dom';
 import Login from './Pages/Login.tsx';
@@ -19,10 +18,44 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import CreateClass from './Pages/Teacher/CreateClass.tsx';
 import ClassProjects from './Pages/Class/Projects.tsx';
+import StudentNavBar from './Components/Student/NavBar.tsx';
+import useSessionExpired from './Hooks/useSessionExpired.tsx';
+import useCache from './Hooks/useCache.tsx';
+import { socket } from './Socket.tsx';
+import { studentStore } from './GlobalStore.tsx';
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const cache = useCache();
+
+  socket.on('connect', () => {
+    console.log('ssadf');
+  });
+
+  const { all, setAll } = studentStore();
+  socket.on('update', (data) => {
+    for (let key of Object.keys(data)) {
+      switch (key) {
+        case 'project':
+          setAll({
+            projects: (projects: any) => {
+              const index = projects.findIndex(
+                (project: { _id: string }) => project._id == data.project._id
+              );
+              return [
+                ...projects.slice(0, index),
+                data.project,
+                ...projects.slice(index + 1),
+              ];
+            },
+          });
+          console.log(all().projects);
+      }
+    }
+  });
+
+  useSessionExpired();
 
   useEffect(() => {
     if (
@@ -35,8 +68,17 @@ function App() {
     }
   }, [location]);
   return (
-    <div className={`${Styles.app} grow flex flex-col`}>
-      <NavBar />
+    <div className={`grow flex flex-col`}>
+      <Routes>
+        <Route path='/' element={<NavBar />} />
+        <Route path='/login' element={<NavBar />} />
+        <Route path='/signup' element={<NavBar />} />
+        <Route path='/confirmation/:email/:code' element={<NavBar />} />
+        <Route path='/student/*' element={<StudentNavBar />} />
+        <Route path='/src' element={<NavBar />} />
+        <Route path='/teacher' element={<NavBar />} />
+        <Route path='/checkEmail' element={<NavBar />} />
+      </Routes>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />

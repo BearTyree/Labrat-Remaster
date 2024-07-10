@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { socket } from '../Socket.tsx';
 
 function Login() {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ function Login() {
         case 'success':
           localStorage.setItem('token', data.token);
           localStorage.setItem('userType', data.userType);
+          socket.emit('token', data.token);
           navigate(`/${data.userType}`);
           return;
         case 'not verified':

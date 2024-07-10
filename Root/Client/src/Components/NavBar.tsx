@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Styles from './NavBar.module.css';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 function NavBar() {
@@ -14,7 +13,9 @@ function NavBar() {
   return (
     <>
       <div
-        className={`${Styles.navBar} fixed w-full top-0 left-0 shadow-sm justify-end flex z-50  py-2 bg-white`}
+        className={
+          'fixed w-full top-0 left-0 shadow-sm justify-end flex z-50  py-2 bg-white'
+        }
       >
         {(token && localStorage.getItem('userType') == 'student') ||
         localStorage.getItem('userType') == 'src' ||

@@ -105,7 +105,6 @@ const createUser = async (
 
   const classModel = await Class.findOne({ code: classCode }).catch(
     (err: Error) => {
-      console.log(err);
       return err.message;
     }
   );
@@ -178,7 +177,6 @@ const authenticateToken = async (token: string) => {
       return { message: 'token not valid' };
     }
   } catch (err) {
-    console.log(err);
     return err.message;
   }
 };

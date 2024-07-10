@@ -95,7 +95,7 @@ router.post('/authenticateToken', async (req, res) => {
 
     if (token == null) return res.sendStatus(401);
   } catch (err) {
-    console.log(err);
+    return res.status(400).json({ message: err });
   }
 
   const verified = await authenticateToken(token);

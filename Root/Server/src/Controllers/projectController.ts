@@ -140,7 +140,7 @@ const getProjects = async (email: string, id: string) => {
 
 const updateProject = async (id: string, name: string, description: string) => {
   try {
-    await Project.findByIdAndUpdate(id, { name, description });
+    await Project.findByIdAndUpdate(id, { name, description }, { new: true });
     return { message: 'success' };
   } catch (err) {
     return { message: err.message };
