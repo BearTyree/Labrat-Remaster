@@ -26,7 +26,10 @@ const useCache = () => {
   };
 
   const findMissing = () => {
-    return Object.keys(all()).filter((key) => all[key] == null);
+    return Object.keys(all()).filter((key) => {
+      all()[key] == null;
+      return key;
+    });
   };
   const cacheMissing = async () => {
     socket.emit('token', localStorage.getItem('token'));
@@ -34,6 +37,7 @@ const useCache = () => {
       switch (diffKey) {
         case 'projects':
           let projectData = await getProjects();
+          console.log(findMissing());
           setAll({ [diffKey]: () => projectData });
       }
     });

@@ -109,8 +109,6 @@ io.on('connection', (socket) => {
 
 const sendUpdateToUser = (id, data) => {
   // io.to(connections[id]).emit('update', { project: data });
-  console.log('update');
-  console.log(id);
   io.to(id.toString()).emit('update', { project: data });
 };
 

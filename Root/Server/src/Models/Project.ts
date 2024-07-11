@@ -69,8 +69,8 @@ projectSchema.post('save', function (doc, next) {
 });
 
 projectSchema.post('findOneAndUpdate', async function (doc, next) {
-  console.log('updated project');
   const users = await findUsersWithAccess(doc._id);
+
   for (let user of users) {
     sendUpdateToUser(user._id, doc);
   }

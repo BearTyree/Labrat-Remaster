@@ -29,31 +29,40 @@ function App() {
   const location = useLocation();
   const cache = useCache();
 
-  socket.on('connect', () => {
-    console.log('ssadf');
-  });
-
   const { all, setAll } = studentStore();
-  socket.on('update', (data) => {
-    for (let key of Object.keys(data)) {
-      switch (key) {
-        case 'project':
-          setAll({
-            projects: (projects: any) => {
-              const index = projects.findIndex(
-                (project: { _id: string }) => project._id == data.project._id
-              );
-              return [
-                ...projects.slice(0, index),
-                data.project,
-                ...projects.slice(index + 1),
-              ];
-            },
-          });
-          console.log(all().projects);
+
+  useEffect(() => {
+    cache();
+    const updateListener = (data: any) => {
+      for (let key of Object.keys(data)) {
+        switch (key) {
+          case 'project':
+            setAll({
+              projects: (projects: any) => {
+                const index = projects.findIndex(
+                  (project: { _id: string }) => project._id == data.project._id
+                );
+                if (index == -1) {
+                  return [...projects, data.project];
+                }
+                return [
+                  ...projects.slice(0, index),
+                  data.project,
+                  ...projects.slice(index + 1),
+                ];
+              },
+            });
+        }
       }
-    }
-  });
+    };
+
+    socket.on('update', updateListener);
+
+    // Cleanup function to remove the listener
+    return () => {
+      socket.off('update', updateListener);
+    };
+  }, []); // Empty dependency array ensures this effect runs only once
 
   useSessionExpired();
 

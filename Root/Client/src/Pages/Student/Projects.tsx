@@ -12,7 +12,6 @@ interface Project {
 function Projects() {
   const navigate = useNavigate();
   const session = useSessionExpired();
-  const cache = useCache();
   const { projects: projectsCache } = studentStore();
 
   // const [projects, setProjects] = useState([]);
@@ -61,10 +60,6 @@ function Projects() {
   //   }
   // };
 
-  useEffect(() => {
-    cache();
-    // getProjects();
-  }, []);
   return (
     <div className=' bg-slate-50 grow h-x'>
       <div className='pt-16 px-32'>
