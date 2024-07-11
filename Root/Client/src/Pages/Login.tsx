@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../Socket.tsx';
+import { mainStore } from '../GlobalStore.tsx';
 
 function Login() {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ function Login() {
     }
     checkToken();
   }, []);
+  const { userType, setUserType } = mainStore();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -52,6 +54,7 @@ function Login() {
           localStorage.setItem('token', data.token);
           localStorage.setItem('userType', data.userType);
           socket.emit('token', data.token);
+          setUserType(() => data.userType);
           navigate(`/${data.userType}`);
           return;
         case 'not verified':

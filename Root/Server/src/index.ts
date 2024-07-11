@@ -67,43 +67,45 @@ app.use(classRoutes);
 
 io.on('connection', (socket) => {
   socket.on('token', async (token) => {
-    const verified = await authenticateToken(token);
-    const userType = await getUserType(verified.email);
+    try {
+      const verified = await authenticateToken(token);
+      const userType = await getUserType(verified.email);
 
-    let id: string;
-    switch (userType) {
-      case 'SRC':
-        const srcUser = await SRC.findOne({ email: verified.email }).catch(
-          (err) => console.log(err)
-        );
-        if (srcUser) {
-          id = srcUser._id.toString();
-        } else {
-          console.log('error');
-        }
-        break;
-      case 'student':
-        const studentUser = await Student.findOne({
-          email: verified.email,
-        }).catch((err) => console.log(err));
-        if (studentUser) {
-          id = studentUser._id.toString();
-        } else {
-          console.log('error');
-        }
-        break;
-      case 'Teacher':
-        const teacherUser = await Teacher.findOne({
-          email: verified.email,
-        }).catch((err) => console.log(err));
-        if (teacherUser) {
-          id = teacherUser._id.toString();
-        } else {
-          console.log('error');
-        }
-        break;
-    }
-    socket.join(id.toString());
+      let id: string;
+      switch (userType) {
+        case 'SRC':
+          const srcUser = await SRC.findOne({ email: verified.email }).catch(
+            (err) => console.log(err)
+          );
+          if (srcUser) {
+            id = srcUser._id.toString();
+          } else {
+            console.log('error');
+          }
+          break;
+        case 'student':
+          const studentUser = await Student.findOne({
+            email: verified.email,
+          }).catch((err) => console.log(err));
+          if (studentUser) {
+            id = studentUser._id.toString();
+          } else {
+            console.log('error');
+          }
+          break;
+        case 'Teacher':
+          const teacherUser = await Teacher.findOne({
+            email: verified.email,
+          }).catch((err) => console.log(err));
+          if (teacherUser) {
+            id = teacherUser._id.toString();
+          } else {
+            console.log('error');
+          }
+          break;
+      }
+      socket.join(id.toString());
+    } catch (err) {}
   });
 });
 

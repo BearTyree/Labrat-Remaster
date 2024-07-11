@@ -22,7 +22,7 @@ import StudentNavBar from './Components/Student/NavBar.tsx';
 import useSessionExpired from './Hooks/useSessionExpired.tsx';
 import useCache from './Hooks/useCache.tsx';
 import { socket } from './Socket.tsx';
-import { studentStore } from './GlobalStore.tsx';
+import { studentStore, mainStore } from './GlobalStore.tsx';
 
 function App() {
   const navigate = useNavigate();
@@ -72,7 +72,6 @@ function App() {
       !location.pathname.includes(localStorage.getItem('userType') as string) &&
       !location.pathname.includes('checkEmail')
     ) {
-      console.log('here');
       navigate(`/${localStorage.getItem('userType')}`);
     }
   }, [location]);

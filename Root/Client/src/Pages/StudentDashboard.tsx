@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import SideBar from '../Components/Student/SideBar';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { mainStore } from '../GlobalStore';
 
 function StudentDashboard() {
   const navigate = useNavigate();

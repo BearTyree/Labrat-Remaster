@@ -3,10 +3,9 @@ import { mainStore, studentStore } from '../GlobalStore.tsx';
 import { socket } from '../Socket.tsx';
 
 const useCache = () => {
-  // const { userType } = mainStore();
+  const { setUserType, getUserType } = mainStore();
   const { all, setAll } = studentStore();
 
-  let userType = 'Student';
   const getProjects = async () => {
     const response = await fetch('http://localhost:3000/getProjects', {
       method: 'POST',
@@ -32,15 +31,19 @@ const useCache = () => {
     });
   };
   const cacheMissing = async () => {
-    socket.emit('token', localStorage.getItem('token'));
-    findMissing().forEach(async (diffKey) => {
-      switch (diffKey) {
-        case 'projects':
-          let projectData = await getProjects();
-          console.log(findMissing());
-          setAll({ [diffKey]: () => projectData });
-      }
-    });
+    setUserType(() => localStorage.getItem('userType'));
+
+    if (getUserType() == 'student') {
+      socket.emit('token', localStorage.getItem('token'));
+      findMissing().forEach(async (diffKey) => {
+        switch (diffKey) {
+          case 'projects':
+            let projectData = await getProjects();
+            console.log(findMissing());
+            setAll({ [diffKey]: () => projectData });
+        }
+      });
+    }
   };
   return cacheMissing;
 };

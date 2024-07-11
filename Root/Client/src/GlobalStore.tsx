@@ -47,11 +47,15 @@ const createStore = (init: Function) => {
 
 let mainStore = createStore((get: Function, set: Function) => ({
   userType: '',
-  setUserType: (op: Function) =>
+  getUserType: () => {
+    return get().userType;
+  },
+  setUserType: (op: Function) => {
     set((store: any) => ({
       ...store,
       userType: op(store.userType),
-    })),
+    }));
+  },
 }));
 
 let studentStore = createStore((get: Function, set: Function) => ({
