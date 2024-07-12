@@ -7,9 +7,7 @@ function Confirmation() {
 
   useEffect(() => {
     const controller = new AbortController();
-    console.log(params);
     async function verifyEmail() {
-      console.log(params);
       const response = await fetch('http://localhost:3000/verify', {
         method: 'POST',
         headers: {
@@ -25,6 +23,7 @@ function Confirmation() {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userType', data.userType);
+        console.log(data);
         switch (data.message) {
           case 'success':
             navigate(`/${data.userType}`);

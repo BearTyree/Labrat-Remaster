@@ -123,6 +123,9 @@ const createUser = async (
 
   // save user to database
   try {
+    if ((await getUserType(email)) != 'user not found') {
+      return 'user already exists';
+    }
     await newUser.save();
     // return success message
     return 'success';
@@ -214,7 +217,7 @@ const verifyEmail = async (email: string, emailVerificationCode: string) => {
         })) as IUser;
         break;
     }
-
+    console.log(possibleUser);
     if (possibleUser) {
       user = possibleUser;
       break;

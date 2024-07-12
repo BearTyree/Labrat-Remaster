@@ -1,14 +1,17 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { mainStore } from '../GlobalStore';
 
 const useSessionExpired = () => {
+  const { getUserType } = mainStore();
   const navigate = useNavigate();
 
   const handleSessionExpired = async () => {
     if (localStorage.getItem('token')) {
-      localStorage.clear();
-      navigate('/login');
-      alert('session expired');
+      // localStorage.clear();
+      // navigate('/login');
+      // console.log('it was me');
+      // alert('session expired');
     }
   };
 
@@ -35,7 +38,10 @@ const useSessionExpired = () => {
       } catch (err) {}
     };
 
-    checkSessionExpired();
+    if (getUserType() == 'student') {
+      console.log(getUserType());
+      checkSessionExpired();
+    }
 
     return () => {
       controller.abort();
