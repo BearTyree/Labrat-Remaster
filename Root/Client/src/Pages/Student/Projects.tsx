@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useSessionExpired from '../../Hooks/useSessionExpired.tsx';
-import useCache from '../../Hooks/useCache.tsx';
+import useSessionExpired from '../../Hooks/olduseSessionExpired.tsx';
+import useCache from '../../Hooks/olduseCache.tsx';
 import { studentStore } from '../../GlobalStore.tsx';
 interface Project {
   _id: string;

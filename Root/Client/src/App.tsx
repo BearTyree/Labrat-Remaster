@@ -1,5 +1,3 @@
-import { Route, Routes } from 'react-router-dom';
-// import { useNavigate, useLocation } from 'react-router-dom';
 // import { useEffect } from 'react';
 // import { socket } from './Socket.tsx';
 
@@ -28,8 +26,46 @@ import { Route, Routes } from 'react-router-dom';
 // import useCache from './Hooks/useCache.tsx';
 
 // import { studentStore } from './GlobalStore.tsx';
+import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+import useGetCache from './Hooks/useGetCache';
+import useCheckSessionExpired from './Hooks/useCheckSessionExpired';
+import useHandleSessionExpired from './Hooks/useHandleSessionExpired';
+
+import Home from './Pages/Home.tsx';
+import Loading from './Pages/Loading';
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const getCache = useGetCache();
+  const [cache, setCache] = useState(null);
+  const checkSessionExpired = useCheckSessionExpired();
+  const handleSessionExpired = useHandleSessionExpired();
+
+  useEffect(() => {
+    const start = async () => {
+      const startLocation =
+        location.pathname == '/loading' ? '/' : location.pathname;
+      const userType = localStorage.getItem('userType');
+      if (userType) {
+        navigate('/loading');
+      } else return;
+      const sessionExpired = await checkSessionExpired();
+      if (sessionExpired) {
+        handleSessionExpired(startLocation);
+        return;
+      }
+      setCache(getCache());
+    };
+    start();
+  }, []);
+
+  // useEffect(() => console.log(cache), [cache]);
+
   // const navigate = useNavigate();
   // const location = useLocation();
   // const cache = useCache();
@@ -82,6 +118,16 @@ function App() {
   return (
     <div className={`grow flex flex-col`}>
       <Routes>
+        {/* 
+        ***** conditional rendering *****
+        
+        <Route path='/' element={<Home />}>
+          <Route path='' element={test ? <Loading /> : <></>} />
+        </Route>
+        
+        **********************************
+        */}
+
         {/* <Route path='/' element={<NavBar />} />
         <Route path='/login' element={<NavBar />} />
         <Route path='/signup' element={<NavBar />} />
